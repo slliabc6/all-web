@@ -1,486 +1,526 @@
-# Meldora Mahjong B2B Site Implementation Plan
+# Meldora Mahjong B2B 网站实施计划
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **供智能体执行：** 必须使用 `superpowers:subagent-driven-development`（推荐）或 `superpowers:executing-plans` 子技能，逐项实施本计划。所有步骤均使用复选框（`- [ ]`）跟踪。
 
-**Goal:** Build a high-quality, reusable Astro + React static B2B mahjong catalog that publishes reviewed prices and sends verifiable email inquiries without cart or checkout behavior.
+**目标：** 建设一套高质量、可复用的 Astro + React 静态麻将 B2B 产品站，公开经审核的价格，提供真实可验证的邮件询盘，同时不包含购物车与结账功能。
 
-**Architecture:** Astro owns routes, content loading, SEO, and static HTML; React Islands own only stateful interactions. Brand data, pricing, and asset manifests live outside page components and are validated before build. The static site posts to an environment-configured inquiry receiver; local tests use a deterministic mock, while production success requires receiver, notification, and mailbox evidence.
+**架构：** Astro 负责路由、内容读取、SEO 和静态 HTML；React Islands 只负责需要浏览器状态的交互。品牌数据、价格和素材清单独立于页面组件，并在构建前校验。静态站向环境变量指定的询盘接收端提交数据；本地测试使用确定性的模拟接收端，生产成功必须具备接收端、通知服务和业务邮箱证据。
 
-**Tech Stack:** Product Design prototype bootstrap, Astro, React 19, TypeScript, Zod, Vitest, Testing Library, Playwright, axe-core, Sharp, Node.js 20+, npm lockfile, Hostinger-compatible static output.
+**技术栈：** Product Design 原型模板、Astro、React 19、TypeScript、Zod、Vitest、Testing Library、Playwright、axe-core、Sharp、Node.js 20+、npm 锁文件、兼容 Hostinger 的静态构建产物。
 
-**Spec:** `docs/superpowers/specs/2026-10-13-meldora-b2b-site-design.md`
+**设计规格：** `docs/superpowers/specs/2026-10-13-meldora-b2b-site-design.md`
 
-## Global Constraints
+## 全局约束
 
-- Bootstrap `templates/b2b-catalog-astro` with the Product Design `prototype` template before converting it to Astro; do not hand-roll the initial app shell.
-- Generate complete static HTML for home, collection, product, inquiry, 404, sitemap, and robots routes; readable content and navigation must survive JavaScript failure.
-- Use only local product information and publishable derivatives; never hotlink or redistribute Givingli assets.
-- Do not fabricate reviews, stock, ship dates, certifications, capacity, lead times, trademarks, or product specifications.
-- Store money as integer minor units. USD values are fixed editorial values with `pricingReviewedAt`, `exchangeRate`, and source note; do not call a live FX API in the browser.
-- Preserve the 43% one-set uplift rule and explicit override reasons; omit unavailable tiers instead of inventing them.
-- No cart, payment, checkout, login, runtime CMS, or client-side secret is permitted.
-- Treat `local-only/**` as private source material and never commit it; public derivatives go under `brands/meldora/assets/web/**` with manifest provenance.
-- Do not publish the Alabama-themed set until name, rights, and the 11 mm image batch are confirmed; unresolved 15/18 mm conflicts stay hidden.
-- Only display inquiry success after the receiver returns the agreed 2xx `accepted: true` contract; a production completion claim additionally requires actual mailbox receipt.
-- Honor keyboard navigation, visible focus, contrast, semantic headings, responsive layouts, and `prefers-reduced-motion`.
-- Preserve unrelated working-tree changes and the untracked text file; each task stages only its own files.
+- 必须先使用 Product Design 的 `prototype` 模板初始化 `templates/b2b-catalog-astro`，再转换为 Astro；不得跳过模板手工搭壳。
+- 首页、集合页、产品页、询盘页、404、sitemap 和 robots 均输出完整静态 HTML；JavaScript 失效时，正文和导航仍然可读、可用。
+- 只使用本地产品资料和获准发布的衍生素材；不得盗链或重新发布 Givingli 素材。
+- 不得虚构评价、库存、发货日期、认证、产能、交期、商标权或产品规格。
+- 金额使用整数最小货币单位。USD 为固定编辑价格，必须包含 `pricingReviewedAt`、`exchangeRate` 和来源说明；浏览器不得调用实时汇率接口。
+- 个人单副价格遵循约 43% 上浮；人工覆盖价格必须记录原因；不存在的价格档不得补造。
+- 不得加入购物车、支付、结账、登录、运行时 CMS 或任何客户端密钥。
+- `local-only/**` 是私有源资料，严禁提交；可公开衍生图放在 `brands/meldora/assets/web/**`，并记录来源。
+- Alabama 主题产品在英文名称、权利和 11 mm 图片批次核实前不得发布；紫色、粉色产品的 15/18 mm 冲突未解决前不得公开厚度。
+- 只有接收端返回约定的 2xx 且 `accepted: true` 时，前端才显示成功；只有业务邮箱实际收件后，才能宣称生产邮件链路完成。
+- 必须支持键盘、可见焦点、足够对比度、语义化标题、响应式布局和 `prefers-reduced-motion`。
+- 保留工作区中不相关的修改和未跟踪文本文件；每个任务只暂存自己的文件。
 
-## Review Focus
+## 重点审查项
 
-1. Missing or malformed public endpoint configuration must leave the form usable via a direct-email fallback and must never show a false success; Task 7 pins this in transport and component tests.
-2. Duplicate product slugs, missing asset references, unapproved assets, or incomplete pricing review metadata must fail validation before build; Task 2 pins all four conditions.
-3. A product with no 100-set tier or with `item` units must render only valid quantity choices and labels; Task 5 pins both cases.
-4. Disabled JavaScript, reduced motion, and keyboard-only input must preserve content access and primary navigation; Tasks 4, 6, and 8 pin these behaviors.
-5. Repeated submission, timeout, 429, 5xx, and stale responses must produce distinct recoverable states without duplicate accepted inquiries; Task 7 pins the full failure matrix.
+1. 询盘 endpoint 缺失或格式错误时，必须提供直接邮件回退，且绝不能显示虚假成功；任务 7 用传输层与组件测试固定该行为。
+2. 产品 slug 重复、素材引用缺失、素材未获发布权、价格审核元数据不完整时，必须在构建前失败；任务 2 覆盖这四类失败。
+3. 没有 100 副价格档的产品不得显示该选项；配件必须使用 `item` 单位；任务 5 覆盖两种情况。
+4. 禁用 JavaScript、开启 reduced motion、只用键盘时，内容与主导航仍须可用；任务 4、6、8 分别覆盖。
+5. 重复提交、超时、429、5xx 和旧请求延迟返回时，必须显示不同的可恢复状态，且不得产生重复成功询盘；任务 7 覆盖完整失败矩阵。
 
 ---
 
-## File Map and Execution Graph
+## 文件分工与执行顺序
 
-- `brands/meldora/**`: public brand copy, products, reviewed pricing, asset derivatives, and manifest.
-- `templates/b2b-catalog-astro/**`: runnable first-site implementation and its unit, component, build, E2E, and visual tests.
-- `components/b2b-site-kit/**`: promoted, brand-agnostic React components, contracts, and usage documentation after first-site validation.
-- `projects/meldora-launch/**`: launch handoff, environment contract, inquiry evidence checklist, and unresolved production gates.
-- `catalog/assets.json`, `docs/STATUS.md`, `docs/STORAGE.md`, `knowledge/CHANGELOG.md`: reusable-asset registry and operational state.
-- `design-qa.md`: dated visual/a11y verification with screenshot paths and zero open P0/P1/P2 issues at handoff.
+- `brands/meldora/**`：公开品牌文案、产品、已审核价格、衍生素材和素材清单。
+- `templates/b2b-catalog-astro/**`：可运行的首站，以及单元、组件、构建、E2E 和视觉测试。
+- `components/b2b-site-kit/**`：首站验证后提炼出的品牌无关 React 组件、数据契约和说明。
+- `projects/meldora-launch/**`：上线交接、环境契约、询盘证据清单和未完成的生产门槛。
+- `catalog/assets.json`、`docs/STATUS.md`、`docs/STORAGE.md`、`knowledge/CHANGELOG.md`：可复用资产目录和项目状态。
+- `design-qa.md`：带日期的视觉/无障碍验证记录；交付时不得遗留 P0/P1/P2 问题。
 
-Execution order:
+执行关系：
 
-1. Task 1 establishes the scaffold and test harness.
-2. Tasks 2, 3, and 7 may run in parallel with exclusive ownership of brand data, image assets, and inquiry code respectively.
-3. Tasks 4–6 consume Tasks 2–3 and should merge in order because they share page composition.
-4. Task 8 verifies the integrated site; Task 9 promotes stable assets; Task 10 performs external synchronization and records production gates.
+1. 任务 1 先建立脚手架和测试环境。
+2. 任务 2、3、7 可并行，文件所有权分别限定为产品数据、图片素材、询盘代码。
+3. 任务 4～6 依赖任务 2～3，且共同修改页面组合，因此按顺序合并。
+4. 任务 8 做集成验收，任务 9 提炼可复用资产，任务 10 完成外部同步并记录生产门槛。
 
-### Task 1: Bootstrap and Convert the Static Site Shell
+### 任务 1：初始化并转换静态站脚手架
 
-**Files:**
-- Create via bootstrap, then modify: `templates/b2b-catalog-astro/package.json`, `package-lock.json`, `.npmrc`, `AGENTS.md`
-- Replace: `templates/b2b-catalog-astro/vite.config.mjs`, `src/main.jsx`, `src/App.jsx`, `src/styles.css`
-- Create: `templates/b2b-catalog-astro/astro.config.mjs`, `tsconfig.json`, `src/pages/index.astro`, `src/layouts/SiteLayout.astro`, `src/styles/global.css`
-- Create: `templates/b2b-catalog-astro/tests/build/static-shell.test.mjs`
-- Preserve/adapt: `templates/b2b-catalog-astro/.openai/hosting.json`, `scripts/prepare-sites-build.mjs`, `tests/sites-worker.test.mjs`, `worker/index.js`
+**文件：**
 
-**Interfaces:**
-- Produces: Astro project commands `dev`, `build:preview`, `build:release`, `preview`, `test`, `test:e2e`; static output in `dist/`; layout props `{ title: string; description: string; canonicalPath: string }`. `build:preview` permits visibly marked draft pricing, while `build:release` rejects it.
+- 通过模板创建后修改：`templates/b2b-catalog-astro/package.json`、`package-lock.json`、`.npmrc`、`AGENTS.md`
+- 替换：`vite.config.mjs`、`src/main.jsx`、`src/App.jsx`、`src/styles.css`
+- 新建：`astro.config.mjs`、`tsconfig.json`、`src/pages/index.astro`、`src/layouts/SiteLayout.astro`、`src/styles/global.css`
+- 新建测试：`tests/build/static-shell.test.mjs`
+- 保留并适配：`.openai/hosting.json`、`scripts/prepare-sites-build.mjs`、`tests/sites-worker.test.mjs`、`worker/index.js`
+- 未标前缀的路径均位于 `templates/b2b-catalog-astro/`。
 
-- [ ] **Step 1: Bootstrap the required Product Design starter**
+**接口：**
 
-Run from `D:\all-web`:
+- 输出命令：`dev`、`build:preview`、`build:release`、`preview`、`test`、`test:e2e`。
+- 静态产物目录：`dist/`。
+- 布局参数：`{ title: string; description: string; canonicalPath: string }`。
+- `build:preview` 允许带醒目标记的草稿价格；`build:release` 拒绝草稿价格。
+
+- [ ] **步骤 1：执行 Product Design 规定的初始化**
+
+在 `D:\all-web` 运行：
 
 ```powershell
 node "C:\Users\Administrator\.codex\plugins\cache\openai-curated-remote\product-design\0.1.56\scripts\bootstrap-prototype.mjs" --dest "D:\all-web\templates\b2b-catalog-astro"
 ```
 
-Expected: JSON reports `status: "created"`; destination contains the pinned React/Vite starter and hosting worker tests.
+预期：JSON 返回 `status: "created"`，目标目录含锁定版本的 React/Vite 模板和托管测试。
 
-- [ ] **Step 2: Write the failing static-shell test**
+- [ ] **步骤 2：先写失败的静态壳测试**
 
-Assert `npm run build:preview` creates `dist/index.html` containing an `<h1>`, a canonical link, and readable placeholder copy, with no `Add to cart`, `Checkout`, or payment route references.
+断言 `npm run build:preview` 生成 `dist/index.html`，其中包含 `<h1>`、canonical 和可读占位内容，同时不存在 `Add to cart`、`Checkout` 或支付路由引用。
 
-- [ ] **Step 3: Run the test to verify it fails**
+- [ ] **步骤 3：运行测试并确认失败**
 
-Run: `npm test -- --run tests/build/static-shell.test.mjs`
+运行：`npm test -- --run tests/build/static-shell.test.mjs`
 
-Expected: FAIL because Astro build and route do not exist.
+预期：失败，原因是 Astro 构建和路由尚未创建。
 
-- [ ] **Step 4: Convert the starter to Astro + React**
+- [ ] **步骤 4：转换为 Astro + React**
 
-Install Astro, `@astrojs/react`, TypeScript, Vitest, Testing Library, Playwright, axe-core, Zod, and Sharp into the lockfile; configure `output: "static"`. Keep the hosting worker contract only where it serves the generated `dist` directory.
+安装 Astro、`@astrojs/react`、TypeScript、Vitest、Testing Library、Playwright、axe-core、Zod 和 Sharp，并写入锁文件；配置 `output: "static"`。仅保留用于服务 `dist` 的托管 worker 契约。
 
-- [ ] **Step 5: Run the foundation checks**
+- [ ] **步骤 5：运行基础检查**
 
-Run: `npm test && npm run build:preview && npm run test:sites`
+运行：`npm test && npm run build:preview && npm run test:sites`
 
-Expected: all pass; `dist/index.html` contains real static markup.
+预期：全部通过，`dist/index.html` 含真实静态内容。
 
-- [ ] **Step 6: Commit**
+- [ ] **步骤 6：提交**
 
 ```powershell
 git add templates/b2b-catalog-astro
 git commit -m "feat: bootstrap meldora astro storefront"
 ```
 
-### Task 2: Validate Brand, Product, and Pricing Data
+### 任务 2：建立并校验品牌、产品和价格数据
 
-**Files:**
-- Create: `brands/meldora/brand.json`, `content/site.json`, `content/faqs.json`, `content/pricing-review.json`
-- Create: `brands/meldora/content/products/{golden-west-coast,purple-bulldog,pink-gothic-dessert,checkerboard,white-racetrack,leopard-bag}.json`
-- Create as quarantined draft only: `brands/meldora/content/drafts/white-alabama.json`
-- Create: `templates/b2b-catalog-astro/src/domain/types.ts`, `src/domain/schemas.ts`, `src/domain/pricing.ts`, `src/domain/load-content.ts`
-- Create: `templates/b2b-catalog-astro/tests/domain/{schemas,pricing,load-content}.test.ts`
+**文件：**
 
-**Interfaces:**
-- Produces: `loadBrandCatalog(root: URL): Promise<BrandCatalog>`; `deriveRetailPrice(baseMinor: number, upliftBps: number, endingRule: PriceEndingRule): number`; `validateCatalog(input: unknown): BrandCatalog`.
-- `BrandCatalog` exposes `site`, `products`, `faqs`, and `pricingReview`; product quantity tiers use `{ quantity: number; unit: "set" | "item"; unitPriceMinor: number }`.
+- 新建：`brands/meldora/brand.json`、`content/site.json`、`content/faqs.json`、`content/pricing-review.json`
+- 新建：`brands/meldora/content/products/{golden-west-coast,purple-bulldog,pink-gothic-dessert,checkerboard,white-racetrack,leopard-bag}.json`
+- 仅以隔离草稿新建：`brands/meldora/content/drafts/white-alabama.json`
+- 新建：`templates/b2b-catalog-astro/src/domain/{types,schemas,pricing,load-content}.ts`
+- 新建测试：`templates/b2b-catalog-astro/tests/domain/{schemas,pricing,load-content}.test.ts`
 
-- [ ] **Step 1: Write failing schema and pricing tests**
+**接口：**
 
-Cover valid fixtures plus duplicate slug, unknown/missing asset ID, `publishable: false`, absent `pricingReviewedAt`, absent `exchangeRate`, missing fixed-price override reason, 43% derivation, ending rule, integer-only money, the bag's `item` unit, and omitted 100-set tiers.
+- `loadBrandCatalog(root: URL): Promise<BrandCatalog>`
+- `deriveRetailPrice(baseMinor: number, upliftBps: number, endingRule: PriceEndingRule): number`
+- `validateCatalog(input: unknown): BrandCatalog`
+- `BrandCatalog` 提供 `site`、`products`、`faqs` 和 `pricingReview`。
+- 数量价格档为 `{ quantity: number; unit: "set" | "item"; unitPriceMinor: number }`。
 
-- [ ] **Step 2: Run the domain tests to verify they fail**
+- [ ] **步骤 1：先写失败的数据与价格测试**
 
-Run: `npm test -- --run tests/domain`
+覆盖合法样例，以及 slug 重复、素材 ID 缺失/未知、`publishable: false`、缺少 `pricingReviewedAt`、缺少 `exchangeRate`、固定覆盖价无原因、43% 派生、尾数规则、非整数金额、收纳包 `item` 单位和缺少 100 副档。
 
-Expected: FAIL because domain contracts and content do not exist.
+- [ ] **步骤 2：运行测试并确认失败**
 
-- [ ] **Step 3: Implement schemas, pricing, and normalized loaders**
+运行：`npm test -- --run tests/domain`
 
-Transcribe the six currently publishable records (five sets plus the leopard bag) from `local-only/brands/麻将/SWN货盘明细(1).xlsx`. Keep original CNY tiers and source date; add a fixed USD candidate table with a documented planning conversion and explicit editorial review status. `build:release` must reject `reviewStatus !== "approved"`; `build:preview` sets `PUBLIC_ALLOW_DRAFT_PRICING=true` and visibly labels draft pricing. Present the table for human review before changing its status to `approved`.
+预期：失败，原因是数据契约和内容尚不存在。
 
-- [ ] **Step 4: Add safety exclusions**
+- [ ] **步骤 3：实现 Schema、定价和标准化读取器**
 
-Keep White Alabama outside the public loader, suppress the disputed purple/pink thickness, and use `Lead time on request` instead of historical ship dates.
+从 `local-only/brands/麻将/SWN货盘明细(1).xlsx` 整理当前可发布的六条记录（五套麻将和一个豹纹包）。保留原始 CNY 价格档和来源日期；增加固定 USD 候选表、计划换算说明和明确审核状态。`build:release` 必须拒绝 `reviewStatus !== "approved"`；`build:preview` 设置 `PUBLIC_ALLOW_DRAFT_PRICING=true` 并明显标出草稿价格。只有人工确认后才能改为 `approved`。
 
-- [ ] **Step 5: Run domain tests**
+- [ ] **步骤 4：加入安全排除规则**
 
-Run: `npm test -- --run tests/domain`
+White Alabama 不进入公开读取器；紫色/粉色款不输出有争议的厚度；历史发货日期统一替换为 `Lead time on request`。
 
-Expected: PASS, including all four Review Focus validation failures.
+- [ ] **步骤 5：运行数据测试**
 
-- [ ] **Step 6: Commit**
+运行：`npm test -- --run tests/domain`
+
+预期：全部通过，包含重点审查项中的四类数据失败。
+
+- [ ] **步骤 6：提交**
 
 ```powershell
 git add brands/meldora templates/b2b-catalog-astro/src/domain templates/b2b-catalog-astro/tests/domain
 git commit -m "feat: add validated meldora product catalog"
 ```
 
-### Task 3: Produce Publishable Image Derivatives and Manifest
+### 任务 3：生成可公开的图片衍生图与素材清单
 
-**Files:**
-- Create: `brands/meldora/assets/manifest.json`
-- Create: `brands/meldora/assets/web/{golden-west-coast,purple-bulldog,pink-gothic-dessert,checkerboard,white-racetrack,leopard-bag}/**.{avif,webp,jpg}`
-- Create: `templates/b2b-catalog-astro/scripts/build-image-derivatives.mjs`, `scripts/verify-asset-manifest.mjs`
-- Create: `templates/b2b-catalog-astro/tests/assets/manifest.test.ts`
+**文件：**
 
-**Interfaces:**
-- Produces: manifest entries `{ id, productId, role, src, width, height, focalPoint, alt, rights, publishable, kind, sourceRef, generationNote, checksum }`; `resolveAsset(id: string): AssetManifestEntry`.
+- 新建：`brands/meldora/assets/manifest.json`
+- 新建：`brands/meldora/assets/web/{golden-west-coast,purple-bulldog,pink-gothic-dessert,checkerboard,white-racetrack,leopard-bag}/**.{avif,webp,jpg}`
+- 新建：`templates/b2b-catalog-astro/scripts/{build-image-derivatives,verify-asset-manifest}.mjs`
+- 新建测试：`templates/b2b-catalog-astro/tests/assets/manifest.test.ts`
 
-- [ ] **Step 1: Write the failing manifest test**
+**接口：**
 
-Assert stable IDs, unique paths, existing files, nonzero dimensions, checksums, alt rules, rights status, source references, and separation of `evidence` from `marketing` imagery.
+- 清单条目：`{ id, productId, role, src, width, height, focalPoint, alt, rights, publishable, kind, sourceRef, generationNote, checksum }`。
+- 素材解析：`resolveAsset(id: string): AssetManifestEntry`。
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [ ] **步骤 1：先写失败的素材清单测试**
 
-Run: `npm test -- --run tests/assets/manifest.test.ts`
+断言 ID 稳定、路径唯一、文件存在、尺寸非零、checksum 正确、alt 合规、权利状态明确、源文件可追踪，并区分 `evidence` 与 `marketing` 图片。
 
-Expected: FAIL because the manifest and public derivatives do not exist.
+- [ ] **步骤 2：运行测试并确认失败**
 
-- [ ] **Step 3: Inspect and shortlist local source images**
+运行：`npm test -- --run tests/assets/manifest.test.ts`
 
-Use `view_image` before every edit batch. Exclude disputed White Alabama images and any file whose product identity, tile thickness, or rights are uncertain.
+预期：失败，原因是清单和公开衍生图尚不存在。
 
-- [ ] **Step 4: Create AI-enhanced marketing images**
+- [ ] **步骤 3：检查并筛选本地源图**
 
-Use the `imagegen` skill/tool for background, lighting, composition, and crop changes. Preserve tile faces, color, layer count, thickness, bag decoration, and included accessories; never treat generated ambience as product evidence.
+每批编辑前必须用 `view_image` 查看原图。排除 White Alabama，以及产品身份、厚度批次或权利不明确的文件。
 
-- [ ] **Step 5: Generate responsive derivatives**
+- [ ] **步骤 4：生成 AI 美化营销图**
 
-Implement the Sharp script to produce deterministic AVIF/WebP/JPEG sizes without overwriting source material, then populate dimensions and SHA-256 checksums in the manifest.
+使用 `imagegen` 技能/工具调整背景、光线、构图和裁切。必须保留真实牌面、颜色、层数、厚度、包袋装饰和随附配件；生成的氛围图不得作为实物证据图。
 
-- [ ] **Step 6: Run asset verification and visually inspect contact sheets**
+- [ ] **步骤 5：生成响应式格式**
 
-Run: `npm test -- --run tests/assets/manifest.test.ts && node scripts/verify-asset-manifest.mjs`
+使用 Sharp 输出可复现的 AVIF/WebP/JPEG，不覆盖原始文件；将尺寸和 SHA-256 checksum 写入清单。
 
-Expected: PASS with zero missing, private, unapproved, or checksum-mismatched assets.
+- [ ] **步骤 6：验证素材并人工查看联系表**
 
-- [ ] **Step 7: Commit**
+运行：`npm test -- --run tests/assets/manifest.test.ts && node scripts/verify-asset-manifest.mjs`
+
+预期：不存在缺失、私有、未获批准或 checksum 不匹配的素材。
+
+- [ ] **步骤 7：提交**
 
 ```powershell
 git add brands/meldora/assets templates/b2b-catalog-astro/scripts templates/b2b-catalog-astro/tests/assets
 git commit -m "feat: add reviewed meldora web imagery"
 ```
 
-### Task 4: Build the Editorial Shell, Navigation, Hero, and Story Sections
+### 任务 4：实现编辑式页面外壳、导航、Hero 与产品叙事
 
-**Files:**
-- Create: `templates/b2b-catalog-astro/src/components/react/{Navigation,HeroProductSwitcher}.tsx`
-- Create: `templates/b2b-catalog-astro/src/components/astro/{PromoBar,ProductStorySection,EditorialFooter}.astro`
-- Create: `templates/b2b-catalog-astro/src/pages/index.astro`, `src/styles/{tokens,layout,motion}.css`
-- Create: `templates/b2b-catalog-astro/tests/components/{Navigation,HeroProductSwitcher}.test.tsx`, `tests/build/home-static.test.mjs`
+**文件：**
 
-**Interfaces:**
-- Consumes: `BrandCatalog`, manifest asset IDs, and `SiteLayout` from Tasks 1–3.
-- Produces: `NavigationProps { items, inquiryHref }`; `HeroProductSwitcherProps { products: HeroProduct[]; reducedMotion?: boolean }`; statically rendered story sections.
+- 新建 React：`src/components/react/{Navigation,HeroProductSwitcher}.tsx`
+- 新建 Astro：`src/components/astro/{PromoBar,ProductStorySection,EditorialFooter}.astro`
+- 新建/修改：`src/pages/index.astro`、`src/styles/{tokens,layout,motion}.css`
+- 新建测试：`tests/components/{Navigation,HeroProductSwitcher}.test.tsx`、`tests/build/home-static.test.mjs`
+- 以上路径均位于 `templates/b2b-catalog-astro/`。
 
-- [ ] **Step 1: Write failing shell and interaction tests**
+**接口：**
 
-Assert the exact approved hero title/subtitle/CTAs, numbered story headings, menu focus return/Escape behavior, hero previous/next and tabs, semantic static links, and no continuous transform under reduced motion.
+- 输入：任务 1～3 的 `BrandCatalog`、素材 ID 与 `SiteLayout`。
+- `NavigationProps { items, inquiryHref }`
+- `HeroProductSwitcherProps { products: HeroProduct[]; reducedMotion?: boolean }`
+- 产品叙事区必须服务端静态渲染。
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [ ] **步骤 1：先写失败的页面与交互测试**
 
-Run: `npm test -- --run tests/components/Navigation.test.tsx tests/components/HeroProductSwitcher.test.tsx tests/build/home-static.test.mjs`
+断言已批准的 Hero 标题、副标题和 CTA、编号叙事标题、菜单焦点返回和 Escape、Hero 前后切换与标签、静态语义链接，以及 reduced motion 下不存在持续位移。
 
-Expected: FAIL because the sections do not exist.
+- [ ] **步骤 2：运行测试并确认失败**
 
-- [ ] **Step 3: Implement tokens and static editorial composition**
+运行：`npm test -- --run tests/components/Navigation.test.tsx tests/components/HeroProductSwitcher.test.tsx tests/build/home-static.test.mjs`
 
-Use the approved colors (`#24120B`, `#F2EDE4`, `#CF3E32`, `#A8C94A`, `#CBDDEA`, `#FFFFFF`), large editorial type, hard-edged primary regions, alternating product stories, and focused responsive breakpoints at 1440×1000 and 390×844.
+预期：失败，原因是对应区块尚不存在。
 
-- [ ] **Step 4: Implement React navigation and hero islands**
+- [ ] **步骤 3：实现设计令牌与静态页面组合**
 
-Hydrate only these components; keep the first hero and all story copy in server output. Mobile uses a single-card carousel instead of a scaled desktop scene.
+使用既定色彩 `#24120B`、`#F2EDE4`、`#CF3E32`、`#A8C94A`、`#CBDDEA`、`#FFFFFF`，实现大字号编辑感排版、硬朗主体区域、交替产品叙事，并重点适配 1440×1000 和 390×844。
 
-- [ ] **Step 5: Run component/build tests and capture baseline screenshots**
+- [ ] **步骤 4：实现 React 导航和 Hero Islands**
 
-Run: `npm test -- --run tests/components tests/build/home-static.test.mjs && npm run build:preview`
+只水合这两个交互组件；首个 Hero 和全部叙事文案保留在服务端输出。移动端使用单卡轮播，不缩小桌面场景。
 
-Expected: PASS; screenshots show a distinct Meldora implementation with Givingli-inspired rhythm but no copied brand assets or copy.
+- [ ] **步骤 5：运行测试并保存基线截图**
 
-- [ ] **Step 6: Commit**
+运行：`npm test -- --run tests/components tests/build/home-static.test.mjs && npm run build:preview`
+
+预期：全部通过；页面具有 Givingli 启发的节奏，但不复制其品牌素材和文案。
+
+- [ ] **步骤 6：提交**
 
 ```powershell
 git add templates/b2b-catalog-astro/src templates/b2b-catalog-astro/tests
 git commit -m "feat: build meldora editorial landing shell"
 ```
 
-### Task 5: Add Wholesale Flow, Use Cases, Tier Demo, and Collection Switch
+### 任务 5：实现批发流程、使用场景、阶梯价演示和产品切换
 
-**Files:**
-- Create: `templates/b2b-catalog-astro/src/components/react/{WholesaleSteps,TierPriceDemo,CollectionSwitch}.tsx`
-- Create: `templates/b2b-catalog-astro/src/components/astro/{UseCaseGrid,ProductCard}.astro`
-- Modify: `templates/b2b-catalog-astro/src/pages/index.astro`, `src/styles/layout.css`
-- Create: `templates/b2b-catalog-astro/tests/components/{WholesaleSteps,TierPriceDemo,CollectionSwitch}.test.tsx`
+**文件：**
 
-**Interfaces:**
-- Consumes: normalized product tiers and asset resolver.
-- Produces: `TierPriceDemoProps { products: PricedProduct[]; defaultProductId: string }`; `CollectionSwitchProps { sets: ProductSummary[]; accessories: ProductSummary[] }`.
+- 新建 React：`src/components/react/{WholesaleSteps,TierPriceDemo,CollectionSwitch}.tsx`
+- 新建 Astro：`src/components/astro/{UseCaseGrid,ProductCard}.astro`
+- 修改：`src/pages/index.astro`、`src/styles/layout.css`
+- 新建测试：`tests/components/{WholesaleSteps,TierPriceDemo,CollectionSwitch}.test.tsx`
+- 以上路径均位于 `templates/b2b-catalog-astro/`。
 
-- [ ] **Step 1: Write failing interaction tests**
+**接口：**
 
-Assert three ordered wholesale steps, pointer/keyboard step changes, all steps readable in static/mobile markup, six use cases, set/accessory switching, next-card mobile affordance, no nonexistent 100 tier, correct `item` labels for the bag, tax/shipping disclaimer, and inquiry-only CTAs.
+- 输入：标准化的产品价格档和素材解析器。
+- `TierPriceDemoProps { products: PricedProduct[]; defaultProductId: string }`
+- `CollectionSwitchProps { sets: ProductSummary[]; accessories: ProductSummary[] }`
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [ ] **步骤 1：先写失败的交互测试**
 
-Run: `npm test -- --run tests/components/WholesaleSteps.test.tsx tests/components/TierPriceDemo.test.tsx tests/components/CollectionSwitch.test.tsx`
+断言三个有序批发步骤、鼠标/键盘切换、静态和移动端均可阅读全部步骤、六种使用场景、麻将/配件切换、移动端下一卡露边、缺失的 100 副档不显示、包袋使用 `item`、税费/运费说明和纯询盘 CTA。
 
-Expected: FAIL because the interactive sections do not exist.
+- [ ] **步骤 2：运行测试并确认失败**
 
-- [ ] **Step 3: Implement the sections**
+运行：`npm test -- --run tests/components/WholesaleSteps.test.tsx tests/components/TierPriceDemo.test.tsx tests/components/CollectionSwitch.test.tsx`
 
-Desktop wholesale steps use sticky media with explicit controls; mobile renders the complete ordered sequence. Tier state derives from product data and never creates cart or order state.
+预期：失败，原因是交互区块尚不存在。
 
-- [ ] **Step 4: Run focused and full tests**
+- [ ] **步骤 3：实现上述区块**
 
-Run: `npm test -- --run tests/components && npm run build:preview`
+桌面批发流程采用 sticky 媒体和明确控制；移动端完整纵向展示。价格状态只能从产品数据派生，不维护购物车或订单状态。
 
-Expected: PASS with valid set/item units and omitted unavailable tiers.
+- [ ] **步骤 4：运行局部和完整测试**
 
-- [ ] **Step 5: Commit**
+运行：`npm test -- --run tests/components && npm run build:preview`
+
+预期：通过；单位正确，不存在的价格档被省略。
+
+- [ ] **步骤 5：提交**
 
 ```powershell
 git add templates/b2b-catalog-astro/src templates/b2b-catalog-astro/tests/components
 git commit -m "feat: add b2b catalog interactions"
 ```
 
-### Task 6: Add Collection, Product, Gallery, FAQ, and SEO Routes
+### 任务 6：实现集合页、产品页、画廊、FAQ 与 SEO
 
-**Files:**
-- Create: `templates/b2b-catalog-astro/src/pages/collections/index.astro`, `src/pages/products/[slug].astro`, `src/pages/contact.astro`, `src/pages/404.astro`, `src/pages/robots.txt.ts`, `src/pages/sitemap.xml.ts`
-- Create: `templates/b2b-catalog-astro/src/components/react/{ProductGallery,FAQList}.tsx`
-- Create: `templates/b2b-catalog-astro/src/lib/{seo,jsonld}.ts`
-- Create: `templates/b2b-catalog-astro/tests/components/{ProductGallery,FAQList}.test.tsx`, `tests/build/routes-seo.test.mjs`
+**文件：**
 
-**Interfaces:**
-- Consumes: `BrandCatalog`, public manifest entries, and shared cards.
-- Produces: `getProductJsonLd(product, site): ProductJsonLd`; `getFaqJsonLd(faqs): FAQPageJsonLd`; keyboard-operable gallery and accordion.
+- 新建页面：`src/pages/collections/index.astro`、`src/pages/products/[slug].astro`、`src/pages/contact.astro`、`src/pages/404.astro`、`src/pages/robots.txt.ts`、`src/pages/sitemap.xml.ts`
+- 新建 React：`src/components/react/{ProductGallery,FAQList}.tsx`
+- 新建：`src/lib/{seo,jsonld}.ts`
+- 新建测试：`tests/components/{ProductGallery,FAQList}.test.tsx`、`tests/build/routes-seo.test.mjs`
+- 以上路径均位于 `templates/b2b-catalog-astro/`。
 
-- [ ] **Step 1: Write failing route, SEO, and component tests**
+**接口：**
 
-Assert one static product route per public product, canonical/OG tags, Product and FAQPage JSON-LD, internal links, 404, sitemap/robots, unique H1, gallery arrow/thumbnail/keyboard behavior, FAQ ARIA state, and all primary product content present before hydration.
+- 输入：`BrandCatalog`、公开素材清单和共享产品卡。
+- `getProductJsonLd(product, site): ProductJsonLd`
+- `getFaqJsonLd(faqs): FAQPageJsonLd`
+- 输出支持键盘的画廊和 FAQ accordion。
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [ ] **步骤 1：先写失败的路由、SEO 与组件测试**
 
-Run: `npm test -- --run tests/components/ProductGallery.test.tsx tests/components/FAQList.test.tsx tests/build/routes-seo.test.mjs`
+断言每个公开产品都有静态路由、canonical/OG、Product 和 FAQPage JSON-LD、内部链接、404、sitemap/robots、唯一 H1、画廊箭头/缩略图/键盘操作、FAQ ARIA 状态，并保证主要产品内容在水合前已存在。
 
-Expected: FAIL because routes and metadata do not exist.
+- [ ] **步骤 2：运行测试并确认失败**
 
-- [ ] **Step 3: Implement routes and progressive enhancement**
+运行：`npm test -- --run tests/components/ProductGallery.test.tsx tests/components/FAQList.test.tsx tests/build/routes-seo.test.mjs`
 
-Render a useful first gallery image, thumbnail links, and FAQ answers in static HTML; React enhances controls without making content dependent on JavaScript.
+预期：失败，原因是路由和元数据尚不存在。
 
-- [ ] **Step 4: Run tests and inspect the generated route tree**
+- [ ] **步骤 3：实现路由和渐进增强**
 
-Run: `npm test && npm run build:preview`
+静态 HTML 必须输出首张画廊图、缩略图链接和 FAQ 答案；React 只增强交互，不让内容依赖 JavaScript。
 
-Expected: PASS; `dist/products/*/index.html`, collection, contact, 404, sitemap, and robots exist; no cart or checkout route exists.
+- [ ] **步骤 4：运行测试并检查构建目录**
 
-- [ ] **Step 5: Commit**
+运行：`npm test && npm run build:preview`
+
+预期：通过；`dist/products/*/index.html`、集合、联系、404、sitemap、robots 均存在；不存在购物车或结账路由。
+
+- [ ] **步骤 5：提交**
 
 ```powershell
 git add templates/b2b-catalog-astro/src templates/b2b-catalog-astro/tests
 git commit -m "feat: add static product and seo routes"
 ```
 
-### Task 7: Implement the Inquiry Contract, Form, and Test Receiver
+### 任务 7：实现询盘契约、表单和测试接收端
 
-**Files:**
-- Create: `templates/b2b-catalog-astro/src/inquiry/{types,schema,transport}.ts`
-- Create: `templates/b2b-catalog-astro/src/components/react/InquiryForm.tsx`
-- Create: `templates/b2b-catalog-astro/worker/inquiry-test-receiver.js`
-- Create: `templates/b2b-catalog-astro/tests/inquiry/{schema,transport,InquiryForm}.test.tsx`
-- Create: `projects/meldora-launch/inquiry-endpoint-contract.md`, `inquiry-evidence-template.md`
-- Modify: `templates/b2b-catalog-astro/src/pages/contact.astro`, product inquiry CTAs
+**文件：**
 
-**Interfaces:**
-- Produces: `InquiryPayload`; `InquiryResult = { status: "accepted"; inquiryId: string } | { status: "invalid" | "rate_limited" | "timeout" | "server_error" | "unavailable"; fieldErrors?: Record<string,string> }`; `submitInquiry(payload, config, signal): Promise<InquiryResult>`.
-- Public configuration: `PUBLIC_INQUIRY_ENDPOINT`, `PUBLIC_CONTACT_EMAIL`, `PUBLIC_INQUIRY_TIMEOUT_MS`; no secret values.
+- 新建：`templates/b2b-catalog-astro/src/inquiry/{types,schema,transport}.ts`
+- 新建：`templates/b2b-catalog-astro/src/components/react/InquiryForm.tsx`
+- 新建：`templates/b2b-catalog-astro/worker/inquiry-test-receiver.js`
+- 新建测试：`templates/b2b-catalog-astro/tests/inquiry/{schema,transport,InquiryForm}.test.tsx`
+- 新建：`projects/meldora-launch/inquiry-endpoint-contract.md`、`inquiry-evidence-template.md`
+- 修改：联系页和产品询盘 CTA。
 
-- [ ] **Step 1: Write failing schema, transport, and form tests**
+**接口：**
 
-Cover wholesale versus one-set required fields, honeypot rejection, missing/malformed endpoint, accepted 2xx contract, 2xx without `accepted: true`, 400 field errors, 429, 5xx, timeout, repeated click, stale response after a new attempt, network failure, direct-email fallback, and focus placement on errors/success.
+- `InquiryPayload`
+- `InquiryResult = { status: "accepted"; inquiryId: string } | { status: "invalid" | "rate_limited" | "timeout" | "server_error" | "unavailable"; fieldErrors?: Record<string,string> }`
+- `submitInquiry(payload, config, signal): Promise<InquiryResult>`
+- 公开配置：`PUBLIC_INQUIRY_ENDPOINT`、`PUBLIC_CONTACT_EMAIL`、`PUBLIC_INQUIRY_TIMEOUT_MS`；不得包含私密值。
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [ ] **步骤 1：先写失败的 Schema、传输层和表单测试**
 
-Run: `npm test -- --run tests/inquiry`
+覆盖批发/单副必填差异、蜜罐、endpoint 缺失/格式错误、2xx accepted、2xx 但未 accepted、400 字段错误、429、5xx、超时、重复点击、新尝试后的旧响应、网络失败、直接邮件回退，以及错误/成功后的焦点位置。
 
-Expected: FAIL because inquiry code does not exist.
+- [ ] **步骤 2：运行测试并确认失败**
 
-- [ ] **Step 3: Implement the receiver-independent contract and transport**
+运行：`npm test -- --run tests/inquiry`
 
-Validate client input for UX, abort at the configured timeout, attach page/product context, ignore client-submitted price as authority, and map every response class to the exact discriminated result.
+预期：失败，原因是询盘模块尚不存在。
 
-- [ ] **Step 4: Implement the form state machine**
+- [ ] **步骤 3：实现与接收服务解耦的契约和传输层**
 
-Disable duplicate submits while pending, show success only for `accepted`, expose a retry path for recoverable states, and always show the configured direct email when the endpoint is unavailable.
+客户端校验只用于体验；按配置超时取消请求；附加页面/产品上下文；客户端价格不得作为接收端权威价格；所有响应必须映射为明确的联合类型结果。
 
-- [ ] **Step 5: Add a local deterministic receiver and production evidence template**
+- [ ] **步骤 4：实现表单状态机**
 
-The local receiver records test payload IDs and can return the response matrix. The evidence template requires browser timestamp, receiver record/ID, notification acceptance, and a screenshot or message ID from the actual business inbox.
+请求中阻止重复提交；只有 `accepted` 才显示成功；可恢复错误提供重试；endpoint 不可用时始终展示配置的直接邮箱。
 
-- [ ] **Step 6: Run inquiry tests**
+- [ ] **步骤 5：建立本地确定性接收端和生产证据模板**
 
-Run: `npm test -- --run tests/inquiry`
+本地接收端记录测试 payload ID，并能返回完整响应矩阵。证据模板必须记录浏览器时间、接收端记录/ID、通知服务接受结果、业务邮箱实际消息 ID 或截图。
 
-Expected: PASS for every Review Focus failure mode; no test or client bundle contains credentials.
+- [ ] **步骤 6：运行询盘测试**
 
-- [ ] **Step 7: Commit**
+运行：`npm test -- --run tests/inquiry`
+
+预期：重点审查项中的所有失败情况均通过；测试和客户端 bundle 中没有凭据。
+
+- [ ] **步骤 7：提交**
 
 ```powershell
 git add templates/b2b-catalog-astro/src/inquiry templates/b2b-catalog-astro/src/components/react/InquiryForm.tsx templates/b2b-catalog-astro/worker templates/b2b-catalog-astro/tests/inquiry projects/meldora-launch
 git commit -m "feat: add verifiable inquiry workflow"
 ```
 
-### Task 8: Run Integrated E2E, Accessibility, and Visual Design QA
+### 任务 8：执行集成 E2E、无障碍和视觉设计验收
 
-**Files:**
-- Create: `templates/b2b-catalog-astro/playwright.config.ts`
-- Create: `templates/b2b-catalog-astro/tests/e2e/{desktop,mobile,no-js,inquiry,a11y}.spec.ts`
-- Create: `templates/b2b-catalog-astro/tests/visual/{desktop,mobile}.spec.ts`
-- Create: `templates/b2b-catalog-astro/design-qa.md`
-- Create test artifacts: `templates/b2b-catalog-astro/test-results/**` (ignore raw transient traces; retain approved comparison screenshots under `tests/visual/baselines/**`)
+**文件：**
 
-**Interfaces:**
-- Consumes: complete local site and deterministic inquiry receiver.
-- Produces: repeatable Playwright suite, approved desktop/mobile baselines, and `design-qa.md` with P0/P1/P2 disposition.
+- 新建：`templates/b2b-catalog-astro/playwright.config.ts`
+- 新建：`tests/e2e/{desktop,mobile,no-js,inquiry,a11y}.spec.ts`
+- 新建：`tests/visual/{desktop,mobile}.spec.ts`
+- 新建：`design-qa.md`
+- 临时 trace 不提交；批准的对比截图保留在 `tests/visual/baselines/**`。
+- 未标前缀的路径均位于 `templates/b2b-catalog-astro/`。
 
-- [ ] **Step 1: Write E2E and visual assertions before fixing integration defects**
+**接口：**
 
-Cover desktop 1440×1000, mobile 390×844, navigation, all islands, product route, inquiry success/failure matrix, disabled JavaScript, reduced motion, keyboard-only flow, and axe scans on every route class.
+- 输入：完整本地站点和确定性询盘接收端。
+- 输出：可重复的 Playwright 测试、批准的桌面/移动基线，以及含 P0/P1/P2 处理结果的 `design-qa.md`。
 
-- [ ] **Step 2: Run the suite and record expected initial failures**
+- [ ] **步骤 1：先写 E2E 与视觉断言**
 
-Run: `npm run build:preview && npm run test:e2e`
+覆盖 1440×1000、390×844、导航、所有 Islands、产品页、询盘成功/失败矩阵、禁用 JavaScript、reduced motion、纯键盘流程，以及每类路由的 axe 扫描。
 
-Expected: at least the new baseline comparison and any integration defects fail; record them in `design-qa.md`.
+- [ ] **步骤 2：运行测试并记录首轮失败**
 
-- [ ] **Step 3: Compare against saved Givingli structural evidence**
+运行：`npm run build:preview && npm run test:e2e`
 
-Use the captured reference screenshots only for layout rhythm and interaction-state comparison. Check navigation, typography, spacing, section pacing, imagery, content, focus states, and responsive composition; do not force pixel imitation.
+预期：新基线比较和发现的集成问题失败；全部记录到 `design-qa.md`。
 
-- [ ] **Step 4: Fix all P0/P1/P2 findings one at a time**
+- [ ] **步骤 3：与 Givingli 参考证据做结构对比**
 
-For each finding, add or tighten the owning automated assertion, apply the smallest fix, rerun that test, and mark the dated evidence path in `design-qa.md`.
+参考截图只用于布局节奏和交互状态。检查导航、字体、间距、色彩、区块节奏、图片、文案、焦点状态和响应式构图，不追求像素级仿制。
 
-- [ ] **Step 5: Run the complete verification matrix**
+- [ ] **步骤 4：逐项修复全部 P0/P1/P2**
 
-Run: `npm test && npm run build:preview && npm run test:e2e && npm run test:sites`
+每个问题先添加或加强对应自动化断言，再实施最小修复并复测；在 `design-qa.md` 记录日期和证据路径。
 
-Expected: all pass; `design-qa.md` reports zero open P0/P1/P2, with desktop/mobile screenshots and manual keyboard results.
+- [ ] **步骤 5：运行完整验证矩阵**
 
-- [ ] **Step 6: Commit**
+运行：`npm test && npm run build:preview && npm run test:e2e && npm run test:sites`
+
+预期：全部通过；`design-qa.md` 无未解决 P0/P1/P2，并含桌面/移动截图和人工键盘检查结果。
+
+- [ ] **步骤 6：提交**
 
 ```powershell
 git add templates/b2b-catalog-astro
 git commit -m "test: verify meldora responsive experience"
 ```
 
-### Task 9: Promote Reusable Components and Register the Project
+### 任务 9：提炼可复用组件并登记项目资产
 
-**Files:**
-- Create: `components/b2b-site-kit/README.md`, `package.json`, `package-lock.json`, `src/index.ts`, `src/types/index.ts`, `src/schema/index.ts`, `src/pricing/index.ts`, `src/components/index.ts`
-- Move or extract: stable brand-agnostic code from `templates/b2b-catalog-astro/src/{domain,components/react}`
-- Create: `components/b2b-site-kit/tests/public-api.test.ts`
-- Modify: `templates/b2b-catalog-astro/package.json`, `package-lock.json`, and imports to consume `file:../../components/b2b-site-kit`
-- Create/modify: `projects/meldora-launch/README.md`, `catalog/assets.json`, `docs/STATUS.md`, `docs/STORAGE.md`, `knowledge/CHANGELOG.md`
+**文件：**
 
-**Interfaces:**
-- Produces: package exports for `Navigation`, `HeroProductSwitcher`, `WholesaleSteps`, `TierPriceDemo`, `ProductGallery`, `CollectionSwitch`, `FAQList`, `InquiryForm`, schemas, and pricing utilities.
+- 新建：`components/b2b-site-kit/README.md`、`package.json`、`package-lock.json`、`src/index.ts`、`src/types/index.ts`、`src/schema/index.ts`、`src/pricing/index.ts`、`src/components/index.ts`
+- 从模板的 `src/{domain,components/react}` 提炼稳定的品牌无关代码。
+- 新建测试：`components/b2b-site-kit/tests/public-api.test.ts`
+- 修改模板的 `package.json`、`package-lock.json` 和 imports，使用 `file:../../components/b2b-site-kit`。
+- 新建/修改：`projects/meldora-launch/README.md`、`catalog/assets.json`、`docs/STATUS.md`、`docs/STORAGE.md`、`knowledge/CHANGELOG.md`
 
-- [ ] **Step 1: Write the failing public API test**
+**接口：**
 
-Import every promised export from the package root, render representative components with a second synthetic brand fixture, and assert no Meldora name, copy, path, or color is hard-coded in the reusable package.
+- 包根目录导出 `Navigation`、`HeroProductSwitcher`、`WholesaleSteps`、`TierPriceDemo`、`ProductGallery`、`CollectionSwitch`、`FAQList`、`InquiryForm`、Schemas 和定价工具。
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [ ] **步骤 1：先写失败的公共 API 测试**
 
-Run from `components/b2b-site-kit`: `npm test -- --run tests/public-api.test.ts`
+从包根目录导入全部承诺导出项，使用第二个虚构品牌 fixture 渲染代表组件，并断言可复用包中没有写死 Meldora 名称、文案、路径或色彩。
 
-Expected: FAIL because the package does not exist.
+- [ ] **步骤 2：运行测试并确认失败**
 
-- [ ] **Step 3: Extract only validated boundaries**
+在 `components/b2b-site-kit` 运行：`npm test -- --run tests/public-api.test.ts`
 
-Move shared types, schemas, pricing, and interactive components behind explicit props; keep Meldora page composition and content in the template/brand folders.
+预期：失败，原因是组件包尚不存在。
 
-- [ ] **Step 4: Register assets and update handoff documents**
+- [ ] **步骤 3：只提炼经过验证的边界**
 
-Add draft catalog entries for the brand, reference analysis, template, component kit, image set, and launch project; change to `verified` only where Task 8 provides evidence. Merge with existing documentation changes instead of overwriting them.
+将公共类型、Schema、定价和交互组件改为显式 props；Meldora 页面组合与内容仍保留在模板/品牌目录。
 
-- [ ] **Step 5: Run package and site regression tests**
+- [ ] **步骤 4：登记资产并更新交接文档**
 
-Run from `components/b2b-site-kit`: `npm test`. Then run from `templates/b2b-catalog-astro`: `npm test && npm run build:preview && npm run test:e2e`.
+为品牌、参考分析、模板、组件包、图片组和上线项目增加目录条目；新条目默认为 `draft`，只有任务 8 有证据的项目才能改为 `verified`。合并已有文档修改，不覆盖。
 
-Expected: PASS using the package exports; catalog JSON validates and contains no `local-only` path or secret.
+- [ ] **步骤 5：运行组件包和站点回归测试**
 
-- [ ] **Step 6: Commit**
+在 `components/b2b-site-kit` 运行 `npm test`；再在模板目录运行 `npm test && npm run build:preview && npm run test:e2e`。
+
+预期：站点通过包导出项运行；目录 JSON 合法，且没有 `local-only` 路径或秘密信息。
+
+- [ ] **步骤 6：提交**
 
 ```powershell
 git add components/b2b-site-kit templates/b2b-catalog-astro projects/meldora-launch catalog/assets.json docs/STATUS.md docs/STORAGE.md knowledge/CHANGELOG.md
 git commit -m "feat: publish reusable b2b site kit"
 ```
 
-### Task 10: Sync GitHub and Notion, Then Record Deployment Gates
+### 任务 10：同步 GitHub 与 Notion，并记录部署门槛
 
-**Files:**
-- Modify: `projects/meldora-launch/README.md`, `inquiry-evidence-template.md`
-- Modify if evidence changes status: `catalog/assets.json`, `docs/STATUS.md`, `knowledge/CHANGELOG.md`
-- External records: GitHub repository `slliabc6/all-web`; Notion hub and `建站资产目录` database.
+**文件与外部对象：**
 
-**Interfaces:**
-- Consumes: green verification from Task 8, reusable entries from Task 9, GitHub remote access, Notion connection, and actual Hostinger/inquiry endpoint details if available.
-- Produces: pushed commits, linked Notion records, and an explicit list of verified versus unverified production conditions.
+- 修改：`projects/meldora-launch/README.md`、`inquiry-evidence-template.md`
+- 视证据修改：`catalog/assets.json`、`docs/STATUS.md`、`knowledge/CHANGELOG.md`
+- GitHub：`slliabc6/all-web`
+- Notion：首页与 `建站资产目录` 数据库。
 
-- [ ] **Step 1: Run pre-sync verification**
+**接口：**
 
-Run `git status --short; git diff --check` from the repository root. Run `npm test` in the component package; run `npm test; npm run build:preview; npm run test:e2e` in the template. Run `npm run build:release` only after the USD review status is explicitly approved.
+- 输入：任务 8 的绿色验证、任务 9 的可复用条目、GitHub/Notion 连接，以及可用时的 Hostinger 和询盘 endpoint 信息。
+- 输出：已推送提交、已链接 Notion 记录，以及明确区分已验证/未验证的生产状态。
 
-Expected: only intentional files remain, all checks pass, no private source or credentials are tracked.
+- [ ] **步骤 1：运行同步前检查**
 
-- [ ] **Step 2: Push the reviewed branch to GitHub**
+在仓库根目录运行 `git status --short; git diff --check`；在组件包运行 `npm test`；在模板运行 `npm test; npm run build:preview; npm run test:e2e`。只有 USD 状态明确批准后才运行 `npm run build:release`。
 
-Push only after confirming the configured remote is `https://github.com/slliabc6/all-web`. Record the commit SHA and repository paths in the project handoff.
+预期：只剩有意变更；所有检查通过；没有私有源文件或凭据被跟踪。
 
-- [ ] **Step 3: Update Notion as a navigation layer**
+- [ ] **步骤 2：推送到 GitHub**
 
-Create or update records for the Givingli reference analysis, Meldora brand, Astro template, component kit, image derivative group, and launch handoff. Link GitHub paths and local locations; do not duplicate the product/price database in Notion.
+先确认远端为 `https://github.com/slliabc6/all-web`，再推送已审核分支；将 commit SHA 和仓库路径写入项目交接。
 
-- [ ] **Step 4: Verify the available Hostinger deployment path**
+- [ ] **步骤 3：将 Notion 更新为导航层**
 
-Record whether the account provides static file upload, Git deployment, SSH, or VPS access; document the selected upload directory and rollback method. If access is absent, leave deployment explicitly `unverified` rather than guessing.
+创建或更新 Givingli 参考分析、Meldora 品牌、Astro 模板、组件包、图片衍生组和项目交接记录。链接 GitHub 路径和本地位置，不在 Notion 维护第二套产品/价格数据库。
 
-- [ ] **Step 5: Verify the real inquiry chain when endpoint access exists**
+- [ ] **步骤 4：核实实际 Hostinger 部署方式**
 
-Submit one labeled test inquiry and collect all four evidence layers: browser accepted, receiver record, notification provider accepted, and actual email received at the confirmed business inbox. If any layer is unavailable, do not claim production inquiry completion.
+记录账户究竟支持静态文件上传、Git 部署、SSH 还是 VPS；写明最终上传目录和回滚方式。没有访问权时标为 `unverified`，不得猜测。
 
-- [ ] **Step 6: Commit final evidence/status changes and push**
+- [ ] **步骤 5：在具备 endpoint 权限后验证真实询盘链路**
+
+提交一条明确标记的测试询盘，收集四层证据：浏览器 accepted、接收端记录、通知服务接受、业务邮箱实际收件。缺少任一层都不得宣称生产询盘完成。
+
+- [ ] **步骤 6：提交最终证据/状态并推送**
 
 ```powershell
 git add projects/meldora-launch catalog/assets.json docs/STATUS.md knowledge/CHANGELOG.md
@@ -488,15 +528,15 @@ git commit -m "docs: record meldora launch verification"
 git push origin main
 ```
 
-Expected: GitHub and Notion point to the same reviewed commit; the handoff clearly distinguishes local-ready, GitHub-synced, Hostinger-deployed, and mailbox-verified states.
+预期：GitHub 与 Notion 指向同一审核提交；交接文件明确区分“本地可运行”“已同步 GitHub”“已部署 Hostinger”“业务邮箱已验证”四种状态。
 
-## Completion Gate
+## 完成门槛
 
-Do not mark this plan complete until:
+满足以下全部条件后才能标记计划完成：
 
-- All project tests, static build, E2E, hosting-worker checks, and asset validation pass.
-- `design-qa.md` has zero open P0/P1/P2 issues and includes final desktop/mobile evidence.
-- The public site contains six publishable mahjong/accessory records, reviewed pricing state, no banned commerce flow, and no excluded Alabama content.
-- Inquiry behavior is truthful at every state; production email is called complete only with four-layer evidence.
-- Reusable components/assets are registered, the GitHub commit is linked, and Notion contains navigation/status records.
-- Unavailable Hostinger or email credentials are reported as explicit external blockers, not silently substituted or invented.
+- 项目测试、静态构建、E2E、托管 worker 和素材校验全部通过。
+- `design-qa.md` 不存在未解决 P0/P1/P2，并包含最终桌面/移动证据。
+- 公共站点包含六条可发布的麻将/配件记录、经过审核的价格状态，不包含被禁止的交易流程或 Alabama 内容。
+- 所有询盘状态均真实；只有取得四层证据后才称生产邮件完成。
+- 可复用组件/素材已登记，GitHub 提交已链接，Notion 已建立导航/状态记录。
+- Hostinger 或邮件凭据不可用时，必须作为明确外部阻塞项记录，不得静默替代或虚构。
