@@ -1,0 +1,15 @@
+{
+  "id": "replace-with-stable-id",
+  "kind": "reference",
+  "title": "示例，请替换",
+  "description": "说明可借鉴或复用的部分",
+  "path": "references/replace-with-stable-id/README.md",
+  "tags": [
+    "product-page"
+  ],
+  "status": "reference-only",
+  "source": "https://example.com",
+  "rights": "unknown; reference only",
+  "verifiedAt": null,
+  "externalLocation": null
+}

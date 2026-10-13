@@ -1,0 +1,35 @@
+# 本地原件、下载包、私有资料与备份
+/local-only/
+/backups/
+*.zip
+*.7z
+*.rar
+*.psd
+*.psb
+*.ai
+*.mp4
+*.mov
+
+# 凭据与本地配置
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# 开发依赖与产物
+node_modules/
+dist/
+build/
+out/
+.next/
+.astro/
+coverage/
+*.log
+
+# 系统文件
+.DS_Store
+Thumbs.db
+Desktop.ini

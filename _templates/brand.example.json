@@ -1,0 +1,26 @@
+{
+  "id": "example-brand",
+  "name": "示例品牌（非真实品牌）",
+  "domain": null,
+  "locale": "en-US",
+  "theme": {
+    "primaryColor": null,
+    "logo": null
+  },
+  "contact": {
+    "publicEmail": null,
+    "inquiryEndpoint": null
+  },
+  "products": [
+    {
+      "id": "example-product",
+      "sku": null,
+      "name": "示例产品",
+      "description": null,
+      "specifications": {},
+      "images": [],
+      "factsVerified": false
+    }
+  ],
+  "publicationStatus": "draft"
+}
