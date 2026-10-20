@@ -1,5 +1,71 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-13",
-  "assets": []
+  "updatedAt": "2026-10-20",
+  "assets": [
+    {
+      "id": "static-commerce-template",
+      "kind": "template",
+      "title": "模块化静态购物站模板",
+      "description": "Astro 静态购物展示模板，包含九类页面、三种销售模式、三种主题和单目录网站成品构建脚本。",
+      "path": "templates/static-commerce/README.md",
+      "tags": ["astro", "commerce", "static", "inquiry", "bilingual"],
+      "status": "verified",
+      "source": "local-original",
+      "rights": "repository-owned code and self-created demo assets",
+      "verifiedAt": "2026-10-20",
+      "externalLocation": null
+    },
+    {
+      "id": "commerce-navigation-components",
+      "kind": "component-set",
+      "title": "购物站导航与页脚组件",
+      "description": "站点页眉、桌面导航、手机菜单、搜索和购物车入口、面包屑及页脚。",
+      "path": "templates/static-commerce/src/components/navigation",
+      "tags": ["navigation", "header", "footer", "mobile"],
+      "status": "verified",
+      "source": "local-original",
+      "rights": "repository-owned code",
+      "verifiedAt": "2026-10-20",
+      "externalLocation": null
+    },
+    {
+      "id": "commerce-product-components",
+      "kind": "component-set",
+      "title": "购物站商品与购物车组件",
+      "description": "商品卡片、网格、画廊、规格、三种价格显示、加入购物车、购物车行和询盘流程。",
+      "path": "templates/static-commerce/src/components/product",
+      "tags": ["product", "catalog", "pricing", "cart", "inquiry"],
+      "status": "verified",
+      "source": "local-original",
+      "rights": "repository-owned code",
+      "verifiedAt": "2026-10-20",
+      "externalLocation": null
+    },
+    {
+      "id": "commerce-page-templates",
+      "kind": "page-template-set",
+      "title": "购物站页面模板与首页模块",
+      "description": "首页、商品、详情、搜索、购物车、关于、批发、联系和 404 页面，以及可排列的首页模块。",
+      "path": "templates/static-commerce/src/pages",
+      "tags": ["page-template", "sections", "shop", "wholesale"],
+      "status": "verified",
+      "source": "local-original",
+      "rights": "repository-owned code",
+      "verifiedAt": "2026-10-20",
+      "externalLocation": null
+    },
+    {
+      "id": "commerce-theme-set-v1",
+      "kind": "theme-set",
+      "title": "购物站首批主题",
+      "description": "现代极简、自然生活和深色精品三套视觉主题，共用页面和商品数据。",
+      "path": "templates/static-commerce/src/styles/themes",
+      "tags": ["theme", "minimal", "natural", "luxury"],
+      "status": "verified",
+      "source": "local-original",
+      "rights": "repository-owned code",
+      "verifiedAt": "2026-10-20",
+      "externalLocation": null
+    }
+  ]
 }

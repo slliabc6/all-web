@@ -16,8 +16,8 @@
 - 默认语言为英文，数据结构允许中文；默认货币为 USD，不做实时汇率换算。
 - 购物车、搜索和询盘全部为纯前端，不产生真实订单、支付或已发送邮件状态。
 - 固定价、阶梯价和仅询价三种价格模式必须由同一商品组件支持。
-- 每个生成网站必须同时输出标准静态目录和 `file://` 可用的离线预览包。
-- 离线预览不得依赖 CDN、在线字体、远程 API 或本地服务器。
+- 每个生成网站只输出一份带 `index.html` 的常规静态资源目录。
+- 静态成品不得依赖 CDN、在线字体、远程 API 或本地服务器。
 - 第三方参考资产不得进入可发布模板，除非来源和许可记录明确允许。
 - 程序内部稳定 ID 使用小写英文；面向用户的云盘与交付目录优先使用中文名称。
 
@@ -60,7 +60,7 @@ Expected: FAIL，因为数据类型和 `loadSite` 尚不存在。
 
 - [ ] **Step 3: 初始化 Astro 与测试依赖并锁定依赖版本**
 
-创建最小 Astro 工程，脚本至少包含 `dev`、`build`、`test`、`test:e2e`、`build:examples` 和 `verify:offline`。提交 `package-lock.json`，不引入 React 或 UI 框架。
+创建最小 Astro 工程，脚本至少包含 `dev`、`build`、`test`、`test:e2e`、`build:examples` 和 `verify:static`。提交 `package-lock.json`，不引入 React 或 UI 框架。
 
 - [ ] **Step 4: 实现数据类型、校验与加载器**
 
@@ -337,29 +337,28 @@ git add templates/static-commerce/data templates/static-commerce/sites templates
 git commit -m "feat: add three composable commerce examples"
 ```
 
-### Task 7: 输出标准静态目录和离线预览包
+### Task 7: 输出单一静态网站成品
 
 **Files:**
 - Create: `templates/static-commerce/scripts/build-site.mjs`
 - Create: `templates/static-commerce/scripts/build-examples.mjs`
-- Create: `templates/static-commerce/scripts/create-offline-bundle.mjs`
-- Create: `templates/static-commerce/scripts/verify-offline.mjs`
-- Create: `templates/static-commerce/tests/unit/offline-paths.test.ts`
-- Create: `templates/static-commerce/tests/e2e/offline.spec.ts`
+- Create: `templates/static-commerce/scripts/verify-static-output.mjs`
+- Create: `templates/static-commerce/tests/unit/static-paths.test.ts`
+- Create: `templates/static-commerce/tests/e2e/static-output.spec.ts`
 - Create: `templates/static-commerce/exports/.gitkeep`
 
 **Interfaces:**
-- Produces: `buildSite(siteId: string, mode: "deploy" | "offline"): Promise<BuildResult>`。
-- Produces: `exports/<站点名称>/静态发布包/` 和 `exports/<站点名称>/离线预览/`。
-- Produces: 离线路径转换函数 `rewriteOfflineReferences(html: string, pagePath: string): string`。
+- Produces: `buildSite(siteDirectory: string): Promise<BuildResult>`。
+- Produces: `exports/<站点名称>/网站成品/`。
+- Produces: 静态路径转换函数 `rewriteStaticReferences(html: string, pagePath: string): string`。
 
-- [ ] **Step 1: 编写离线路径失败测试**
+- [ ] **Step 1: 编写静态路径失败测试**
 
 覆盖根页面、嵌套商品页、带查询字符串和锚点的链接、图片、CSS、脚本以及已经是相对路径的引用。
 
 - [ ] **Step 2: 运行测试并确认失败**
 
-Run: `cd templates/static-commerce; npm test -- --run tests/unit/offline-paths.test.ts`
+Run: `cd templates/static-commerce; npm test -- --run tests/unit/static-paths.test.ts`
 
 Expected: FAIL，因为构建与转换脚本尚不存在。
 
@@ -367,21 +366,21 @@ Expected: FAIL，因为构建与转换脚本尚不存在。
 
 每次构建使用独立临时输出，避免并行写入同一目录。成功后再原子地放入中文交付目录。
 
-- [ ] **Step 4: 实现离线包转换与完整性检查**
+- [ ] **Step 4: 实现单一静态成品转换与完整性检查**
 
 检查所有 HTML 内部引用均指向包内存在的文件；发现缺失文件、绝对站内路径或远程请求时构建失败。
 
 - [ ] **Step 5: 通过 HTTP 与 file:// 浏览器验证**
 
-Run: `cd templates/static-commerce; npm run build:examples; npm run verify:offline; npm run test:e2e -- offline.spec.ts`
+Run: `cd templates/static-commerce; npm run build:examples; npm run verify:static; npm run test:e2e -- static-output.spec.ts`
 
-Expected: 三个静态发布包和三个离线预览均生成；九类页面、图片、导航、搜索和购物车通过；外部 HTTP 请求为零。
+Expected: 三个网站成品目录生成；九类页面、图片、导航、搜索和购物车通过；外部 HTTP 请求为零。
 
 - [ ] **Step 6: 提交**
 
 ```bash
 git add templates/static-commerce/scripts templates/static-commerce/tests templates/static-commerce/exports/.gitkeep templates/static-commerce/package.json
-git commit -m "feat: add deploy and offline commerce exports"
+git commit -m "feat: export single static site bundle"
 ```
 
 ### Task 8: 登记模板资产与使用说明
@@ -400,7 +399,7 @@ git commit -m "feat: add deploy and offline commerce exports"
 
 - [ ] **Step 1: 编写模板使用说明**
 
-说明新增站点、品牌、商品、主题和配方的方法；列出真实存在的安装、开发、测试、构建和离线验证命令。
+说明新增站点、品牌、商品、主题和配方的方法；列出真实存在的安装、开发、测试、构建和静态成品验证命令。
 
 - [ ] **Step 2: 更新资产索引和存储说明**
 
@@ -412,9 +411,9 @@ git commit -m "feat: add deploy and offline commerce exports"
 
 - [ ] **Step 4: 运行最终验证**
 
-Run: `cd templates/static-commerce; npm test -- --run; npm run build:examples; npm run verify:offline; npm run test:e2e`
+Run: `cd templates/static-commerce; npm test -- --run; npm run build:examples; npm run verify:static; npm run test:e2e`
 
-Expected: 所有测试通过，三个站点的发布包和离线预览存在。
+Expected: 所有测试通过，三个站点的网站成品目录存在。
 
 Run: `cd ../..; Get-Content -Raw -Encoding utf8 catalog/assets.json | ConvertFrom-Json | Out-Null; git diff --check`
 
