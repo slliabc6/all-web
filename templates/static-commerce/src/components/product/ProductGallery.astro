@@ -1,0 +1,17 @@
+---
+import type { Product } from "../../domain/types";
+interface Props { product: Product }
+const { product } = Astro.props;
+---
+
+<div class="product-gallery" data-product-gallery>
+  {product.images.map((image, index) => (
+    <img
+      src={`/catalog-assets/${image.src}`}
+      alt={image.alt.en}
+      width={image.width}
+      height={image.height}
+      loading={index === 0 ? "eager" : "lazy"}
+    />
+  ))}
+</div>

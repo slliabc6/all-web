@@ -1,0 +1,18 @@
+---
+import type { CurrencyConfig, Product } from "../../domain/types";
+import { formatProductPrice } from "../../domain/pricing";
+
+interface Props { product: Product; currency: CurrencyConfig; showTiers?: boolean }
+const { product, currency, showTiers = false } = Astro.props;
+const price = formatProductPrice(product, currency);
+---
+
+<div class="product-price" data-price-mode={price.kind}>
+  <span>{price.primary}</span>
+  {price.original && <del>{price.original}</del>}
+  {showTiers && price.tiers && (
+    <ul class="price-tiers">
+      {price.tiers.map((tier) => <li><span>{tier.label}</span><strong>{tier.unitPrice}</strong></li>)}
+    </ul>
+  )}
+</div>

@@ -1,0 +1,21 @@
+---
+import type { Product } from "../../domain/types";
+interface Props { product: Product }
+const { product } = Astro.props;
+---
+
+<div class="product-options">
+  {product.options?.map((option) => (
+    <fieldset aria-label={option.label.en} data-option={option.id}>
+      <legend>{option.label.en}</legend>
+      <div class="option-values">
+        {option.values.map((value, index) => (
+          <label>
+            <input type="radio" name={option.id} value={value.id} checked={index === 0} />
+            <span>{value.label.en}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  ))}
+</div>

@@ -1,0 +1,36 @@
+---
+import type { SiteBundle } from "../domain/types";
+import SiteHeader from "../components/navigation/SiteHeader.astro";
+import SiteFooter from "../components/navigation/SiteFooter.astro";
+import "../styles/base.css";
+import "../styles/themes/minimal.css";
+import "../styles/themes/natural.css";
+import "../styles/themes/luxury.css";
+
+interface Props {
+  bundle: SiteBundle;
+  title: string;
+  description?: string;
+}
+
+const { bundle, title, description = bundle.brand.description.en } = Astro.props;
+---
+
+<!doctype html>
+<html lang={bundle.site.defaultLanguage} data-theme={bundle.site.themeId}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <title>{title} · {bundle.brand.name.en}</title>
+  </head>
+  <body data-site-id={bundle.site.id}>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <SiteHeader bundle={bundle} currentPath={Astro.url.pathname} />
+    <main id="main-content">
+      <slot />
+    </main>
+    <SiteFooter bundle={bundle} />
+    <script src="../scripts/cart-client.ts"></script>
+  </body>
+</html>

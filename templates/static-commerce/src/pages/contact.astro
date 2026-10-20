@@ -1,0 +1,15 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import Breadcrumbs from "../components/navigation/Breadcrumbs.astro";
+import { loadCurrentSite } from "../domain/current-site";
+const bundle = await loadCurrentSite();
+---
+
+<SiteLayout bundle={bundle} title="Contact">
+  <article class="content-page">
+    <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Contact" }]} />
+    <h1>Contact</h1>
+    <p>Tell us which products, options and quantities you are interested in.</p>
+    <a class="button" href={`mailto:${bundle.site.contact.email}`}>Email {bundle.site.contact.email}</a>
+  </article>
+</SiteLayout>

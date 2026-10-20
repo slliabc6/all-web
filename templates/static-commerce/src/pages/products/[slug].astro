@@ -1,0 +1,49 @@
+---
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import Breadcrumbs from "../../components/navigation/Breadcrumbs.astro";
+import ProductGallery from "../../components/product/ProductGallery.astro";
+import ProductOptions from "../../components/product/ProductOptions.astro";
+import ProductPrice from "../../components/product/ProductPrice.astro";
+import ProductGrid from "../../components/product/ProductGrid.astro";
+import AddToCart from "../../components/cart/AddToCart.astro";
+import { loadCurrentSite } from "../../domain/current-site";
+
+export async function getStaticPaths() {
+  const bundle = await loadCurrentSite();
+  return bundle.products.map((product) => ({ params: { slug: product.slug }, props: { productId: product.id } }));
+}
+
+interface Props { productId: string }
+const { productId } = Astro.props;
+const bundle = await loadCurrentSite();
+const product = bundle.products.find((candidate) => candidate.id === productId);
+if (!product) throw new Error(`Unknown product ${productId}`);
+const related = product.relatedProductIds
+  .map((id) => bundle.products.find((candidate) => candidate.id === id))
+  .filter((candidate): candidate is NonNullable<typeof candidate> => Boolean(candidate));
+---
+
+<SiteLayout bundle={bundle} title={product.name.en} description={product.description.en}>
+  <section class="product-page">
+    <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Shop", href: "/shop" }, { label: product.name.en }]} />
+    <div class="product-detail">
+      <ProductGallery product={product} />
+      <div class="product-summary">
+        <p class="product-meta">{product.sku}</p>
+        <h1>{product.name.en}</h1>
+        <ProductPrice product={product} currency={bundle.site.currency} showTiers />
+        <p>{product.description.en}</p>
+        {product.moq && <p><strong>Minimum order:</strong> {product.moq}</p>}
+        <p><strong>Availability:</strong> {product.inventoryStatus.replaceAll("-", " ")}</p>
+        <ProductOptions product={product} />
+        <AddToCart product={product} siteId={bundle.site.id} />
+      </div>
+    </div>
+    {related.length > 0 && (
+      <section class="related-products">
+        <h2>Related products</h2>
+        <ProductGrid products={related} currency={bundle.site.currency} columns={3} variant="compact" />
+      </section>
+    )}
+  </section>
+</SiteLayout>

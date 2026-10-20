@@ -1,0 +1,64 @@
+[
+  {
+    "id": "linen-tray",
+    "slug": "linen-tray",
+    "sku": "LINEN-TRAY",
+    "name": { "en": "Linen tray", "zh": "亚麻托盘" },
+    "description": { "en": "A quiet catch-all for the table." },
+    "categoryIds": ["home"],
+    "tags": ["featured"],
+    "images": [
+      { "src": "assets/linen-tray.svg", "alt": { "en": "Linen tray" }, "width": 800, "height": 800 }
+    ],
+    "options": [
+      {
+        "id": "color",
+        "label": { "en": "Color", "zh": "颜色" },
+        "values": [
+          { "id": "sand", "label": { "en": "Sand", "zh": "沙色" } },
+          { "id": "olive", "label": { "en": "Olive", "zh": "橄榄绿" } }
+        ]
+      }
+    ],
+    "priceMode": "fixed",
+    "price": 29,
+    "inventoryStatus": "in-stock",
+    "relatedProductIds": ["woven-basket"]
+  },
+  {
+    "id": "woven-basket",
+    "slug": "woven-basket",
+    "sku": "WOVEN-BASKET",
+    "name": { "en": "Woven basket", "zh": "编织篮" },
+    "description": { "en": "Natural storage for calm rooms." },
+    "categoryIds": ["home"],
+    "tags": ["wholesale"],
+    "images": [
+      { "src": "assets/woven-basket.svg", "alt": { "en": "Woven basket" }, "width": 800, "height": 800 }
+    ],
+    "priceMode": "tiered",
+    "priceTiers": [
+      { "minQuantity": 10, "unitPrice": 12 },
+      { "minQuantity": 50, "unitPrice": 10 }
+    ],
+    "moq": 10,
+    "inventoryStatus": "made-to-order",
+    "relatedProductIds": ["linen-tray"]
+  },
+  {
+    "id": "brass-lamp",
+    "slug": "brass-lamp",
+    "sku": "BRASS-LAMP",
+    "name": { "en": "Brass lamp", "zh": "黄铜灯" },
+    "description": { "en": "A warm table light made to order." },
+    "categoryIds": ["home"],
+    "tags": ["made-to-order"],
+    "images": [
+      { "src": "assets/brass-lamp.svg", "alt": { "en": "Brass lamp" }, "width": 800, "height": 800 }
+    ],
+    "priceMode": "inquiry",
+    "moq": 2,
+    "inventoryStatus": "made-to-order",
+    "relatedProductIds": ["woven-basket"]
+  }
+]

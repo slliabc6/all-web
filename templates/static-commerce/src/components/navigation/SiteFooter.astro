@@ -1,0 +1,20 @@
+---
+import type { SiteBundle } from "../../domain/types";
+interface Props { bundle: SiteBundle }
+const { bundle } = Astro.props;
+const { site, brand } = bundle;
+const variant = site.footer?.variant ?? "simple";
+---
+
+<footer class="site-footer" data-variant={variant}>
+  <div>
+    <strong>{brand.name[site.defaultLanguage] ?? brand.name.en}</strong>
+    <p>{brand.description[site.defaultLanguage] ?? brand.description.en}</p>
+  </div>
+  {variant === "columns" && (
+    <nav aria-label="Footer">
+      {site.navigation.map((item) => <a href={item.href}>{item.label[site.defaultLanguage] ?? item.label.en}</a>)}
+    </nav>
+  )}
+  <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+</footer>

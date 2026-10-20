@@ -1,0 +1,11 @@
+---
+import type { SiteBundle } from "../../domain/types";
+interface Props { bundle: SiteBundle; variant: string }
+const { bundle, variant } = Astro.props;
+---
+
+<section class="section wholesale-section" data-section="wholesale-callout" data-variant={variant}>
+  <div><p class="eyebrow">For trade partners</p><h2>Flexible quantities for wholesale.</h2></div>
+  <p>Review MOQ and tier pricing, then send one clear product enquiry.</p>
+  <a class="button" href="/wholesale">Wholesale information</a>
+</section>

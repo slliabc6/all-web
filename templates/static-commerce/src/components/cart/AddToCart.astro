@@ -1,0 +1,22 @@
+---
+import type { Product } from "../../domain/types";
+interface Props { product: Product; siteId: string }
+const { product, siteId } = Astro.props;
+const payload = JSON.stringify({
+  productId: product.id,
+  sku: product.sku,
+  name: product.name.en,
+  priceMode: product.priceMode,
+  price: product.price,
+  priceTiers: product.priceTiers
+});
+---
+
+<form class="add-to-cart" data-add-to-cart data-site-id={siteId} data-product={payload}>
+  <label>
+    <span>Quantity</span>
+    <input type="number" name="quantity" aria-label="Quantity" min="1" value={product.moq ?? 1} />
+  </label>
+  <button type="submit">Add to cart</button>
+  <p class="form-status" data-cart-status aria-live="polite"></p>
+</form>

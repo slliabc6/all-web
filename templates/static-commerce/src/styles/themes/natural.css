@@ -1,0 +1,10 @@
+:root[data-theme="natural"] {
+  --page-bg: #f0eadc;
+  --surface: #f8f3e8;
+  --text: #273126;
+  --muted: #657060;
+  --line: #c9c0aa;
+  --accent: #8a4f2d;
+  --radius: 1.1rem;
+  --display-font: Georgia, "Times New Roman", serif;
+}

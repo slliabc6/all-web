@@ -1,0 +1,10 @@
+{
+  "id": "retail-default",
+  "sections": [
+    { "type": "hero", "variant": "minimal" },
+    { "type": "categories", "variant": "pills" },
+    { "type": "featured", "variant": "grid" },
+    { "type": "brand-story", "variant": "split" },
+    { "type": "faq", "variant": "list" }
+  ]
+}

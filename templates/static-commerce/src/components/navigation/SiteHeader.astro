@@ -1,0 +1,36 @@
+---
+import type { SiteBundle } from "../../domain/types";
+import MobileNavigation from "./MobileNavigation.astro";
+
+interface Props {
+  bundle: SiteBundle;
+  currentPath: string;
+}
+
+const { bundle, currentPath } = Astro.props;
+const { site, brand } = bundle;
+const variant = site.header?.variant ?? "minimal";
+const normalize = (value: string) => value === "/" ? "/" : value.replace(/\/$/, "");
+---
+
+{site.header?.announcement && (
+  <p class="announcement">{site.header.announcement[site.defaultLanguage] ?? site.header.announcement.en}</p>
+)}
+<header class="site-header" data-variant={variant}>
+  <a class="brand" href="/">{brand.name[site.defaultLanguage] ?? brand.name.en}</a>
+  <nav class="desktop-nav" aria-label="Primary">
+    {site.navigation.map((item) => (
+      <a
+        href={item.href}
+        aria-current={normalize(item.href) === normalize(currentPath) ? "page" : undefined}
+      >
+        {item.label[site.defaultLanguage] ?? item.label.en}
+      </a>
+    ))}
+  </nav>
+  <div class="header-actions">
+    {site.features.search && <a href="/search" aria-label="Search">Search</a>}
+    {site.features.cart && <a href="/cart" aria-label="Cart, 0 items">Cart <span data-cart-count>0</span></a>}
+  </div>
+  <MobileNavigation site={site} currentPath={currentPath} />
+</header>

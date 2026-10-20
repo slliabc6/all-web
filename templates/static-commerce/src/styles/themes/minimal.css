@@ -1,0 +1,10 @@
+:root[data-theme="minimal"] {
+  --page-bg: #f7f7f4;
+  --surface: #ffffff;
+  --text: #171717;
+  --muted: #6a6a65;
+  --line: #dadad4;
+  --accent: #245f4a;
+  --radius: 0.25rem;
+  --display-font: ui-sans-serif, system-ui, sans-serif;
+}

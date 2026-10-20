@@ -1,0 +1,11 @@
+{
+  "id": "test-recipe",
+  "sections": [
+    { "type": "hero", "variant": "split" },
+    { "type": "categories", "variant": "grid" },
+    { "type": "featured", "variant": "grid" },
+    { "type": "wholesale-callout", "variant": "band", "audience": ["wholesale", "hybrid"] },
+    { "type": "brand-story", "variant": "editorial" },
+    { "type": "faq", "variant": "list" }
+  ]
+}

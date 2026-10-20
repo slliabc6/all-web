@@ -1,0 +1,5 @@
+dist/
+exports/*
+!exports/.gitkeep
+playwright-report/
+test-results/
