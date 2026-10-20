@@ -74,6 +74,10 @@ async function fixture(overrides?: {
 
   await writeJson(path.join(root, "sites", siteId, "site.json"), site);
   await writeJson(path.join(root, "sites", siteId, "brand.json"), brand);
+  await writeJson(path.join(root, "recipes", "retail-default.json"), {
+    id: "retail-default",
+    sections: [{ type: "hero", variant: "split" }]
+  });
   await writeJson(path.join(catalogDir, "categories.json"), categories);
   await writeJson(path.join(catalogDir, "products.json"), products);
   if (overrides?.createImage !== false) {

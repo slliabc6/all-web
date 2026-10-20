@@ -1,0 +1,12 @@
+---
+import type { SiteBundle } from "../../domain/types";
+interface Props { bundle: SiteBundle; variant: string }
+const { bundle, variant } = Astro.props;
+---
+
+<section class="section story-section" data-section="brand-story" data-variant={variant}>
+  <p class="eyebrow">Our approach</p>
+  <h2>Objects with purpose, presented with clarity.</h2>
+  <p>{bundle.brand.description.en}</p>
+  <a href="/about">Read our story</a>
+</section>

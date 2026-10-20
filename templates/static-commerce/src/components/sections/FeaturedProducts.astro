@@ -1,0 +1,13 @@
+---
+import type { SiteBundle } from "../../domain/types";
+import ProductGrid from "../product/ProductGrid.astro";
+interface Props { bundle: SiteBundle; variant: string }
+const { bundle, variant } = Astro.props;
+const tagged = bundle.products.filter((product) => product.tags.includes("featured"));
+const products = (tagged.length ? tagged : bundle.products).slice(0, 4);
+---
+
+<section class="section featured-section" data-section="featured" data-variant={variant}>
+  <div class="section-copy"><p class="eyebrow">Selected</p><h2>Featured products</h2></div>
+  <ProductGrid products={products} currency={bundle.site.currency} columns={products.length === 4 ? 4 : 3} variant={variant === "editorial" ? "image-led" : "standard"} />
+</section>

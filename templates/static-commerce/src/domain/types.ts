@@ -4,6 +4,18 @@ export type PriceMode = "fixed" | "tiered" | "inquiry";
 export type SalesMode = "retail" | "wholesale" | "hybrid";
 export type ThemeId = "minimal" | "natural" | "luxury";
 export type RecipeId = string;
+export type SectionType = "hero" | "categories" | "featured" | "brand-story" | "wholesale-callout" | "faq";
+
+export interface RecipeSection {
+  type: SectionType;
+  variant: string;
+  audience?: SalesMode[];
+}
+
+export interface SiteRecipe {
+  id: RecipeId;
+  sections: RecipeSection[];
+}
 
 export interface CurrencyConfig {
   code: string;
@@ -97,6 +109,7 @@ export interface SiteBundle {
   brand: Brand;
   categories: Category[];
   products: Product[];
+  recipe: SiteRecipe;
   rootDir: string;
   catalogDir: string;
 }

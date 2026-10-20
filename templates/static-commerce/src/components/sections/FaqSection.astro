@@ -1,0 +1,16 @@
+---
+interface Props { variant: string }
+const { variant } = Astro.props;
+const questions = [
+  ["Can I buy retail?", "The site configuration decides whether retail, wholesale or both are shown."],
+  ["Does the cart place an order?", "No. It prepares a product enquiry that you can copy or open in your mail app."],
+  ["Are prices live?", "No. Displayed prices come from the site's static product data."]
+];
+---
+
+<section class="section faq-section" data-section="faq" data-variant={variant}>
+  <div class="section-copy"><p class="eyebrow">Questions</p><h2>Before you enquire</h2></div>
+  <div class="faq-list">
+    {questions.map(([question, answer]) => <details><summary>{question}</summary><p>{answer}</p></details>)}
+  </div>
+</section>

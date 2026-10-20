@@ -1,14 +1,28 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
 import { loadCurrentSite } from "../domain/current-site";
+import { renderableSections } from "../recipes/section-registry";
+import HeroSection from "../components/sections/HeroSection.astro";
+import CategorySection from "../components/sections/CategorySection.astro";
+import FeaturedProducts from "../components/sections/FeaturedProducts.astro";
+import BrandStory from "../components/sections/BrandStory.astro";
+import WholesaleCallout from "../components/sections/WholesaleCallout.astro";
+import FaqSection from "../components/sections/FaqSection.astro";
 const bundle = await loadCurrentSite();
+const sections = renderableSections(bundle.recipe, bundle.site.salesMode);
+const sectionComponents = {
+  hero: HeroSection,
+  categories: CategorySection,
+  featured: FeaturedProducts,
+  "brand-story": BrandStory,
+  "wholesale-callout": WholesaleCallout,
+  faq: FaqSection
+};
 ---
 
 <SiteLayout bundle={bundle} title="Home">
-  <section class="page-intro">
-    <p class="eyebrow">{bundle.site.salesMode === "wholesale" ? "Wholesale collection" : "New collection"}</p>
-    <h1>{bundle.brand.name.en}</h1>
-    <p>{bundle.brand.description.en}</p>
-    <a class="button" href="/shop">Browse products</a>
-  </section>
+  {sections.map((section) => {
+    const Component = sectionComponents[section.type];
+    return <Component bundle={bundle} variant={section.variant} />;
+  })}
 </SiteLayout>

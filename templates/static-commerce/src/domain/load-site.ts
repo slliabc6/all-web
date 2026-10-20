@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Brand, Category, Product, SiteBundle, SiteConfig } from "./types";
 import { brandSchema, categoriesSchema, productsSchema, siteConfigSchema } from "./schemas";
+import { parseRecipe } from "../recipes/section-registry";
 
 const defaultRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 
@@ -68,6 +69,13 @@ export async function loadSite(siteId: string, rootDir = defaultRoot): Promise<S
   const brandPath = path.join(siteDir, "brand.json");
   const site = parseFile<SiteConfig>(sitePath, siteConfigSchema, await readJson(sitePath));
   const brand = parseFile<Brand>(brandPath, brandSchema, await readJson(brandPath));
+  const recipePath = path.join(rootDir, "recipes", `${site.recipeId}.json`);
+  let recipe;
+  try {
+    recipe = parseRecipe(await readJson(recipePath));
+  } catch (error) {
+    throw new Error(`${path.basename(recipePath)}: ${error instanceof Error ? error.message : String(error)}`);
+  }
   const catalogDir = path.join(rootDir, "data", "catalogs", site.catalogId);
   const categoriesPath = path.join(catalogDir, "categories.json");
   const productsPath = path.join(catalogDir, "products.json");
@@ -80,5 +88,5 @@ export async function loadSite(siteId: string, rootDir = defaultRoot): Promise<S
   assertUnique(products, "sku");
   await validateReferences(products, categories, catalogDir);
 
-  return { site, brand, categories, products, rootDir, catalogDir };
+  return { site, brand, categories, products, recipe, rootDir, catalogDir };
 }

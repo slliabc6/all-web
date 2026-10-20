@@ -1,0 +1,11 @@
+:root[data-theme="luxury"] {
+  color-scheme: dark;
+  --page-bg: #11100f;
+  --surface: #1d1b19;
+  --text: #f4efe5;
+  --muted: #bdb4a4;
+  --line: #3e3932;
+  --accent: #a67c38;
+  --radius: 0;
+  --display-font: Georgia, "Times New Roman", serif;
+}
