@@ -9,7 +9,7 @@
     "test": "vitest",
     "test:e2e": "playwright test",
     "build:examples": "node scripts/build-examples.mjs",
-    "verify:offline": "node scripts/verify-offline.mjs"
+    "verify:static": "node scripts/verify-static-output.mjs"
   },
   "dependencies": {
     "astro": "^7.4.1",
