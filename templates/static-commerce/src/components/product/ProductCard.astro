@@ -23,8 +23,9 @@ const image = product.images[0];
     <img src={`/catalog-assets/${image.src}`} alt={image.alt.en} width={image.width} height={image.height} loading="lazy" />
   </a>
   <div class="product-card-content">
-    <p class="product-meta">{product.sku}</p>
+    <p class="product-meta">{product.tags.includes("numbered-edition") ? `Numbered batch · ${product.sku}` : product.sku}</p>
     <h2><a href={`/products/${product.slug}`}>{product.name.en}</a></h2>
+    {product.tags.includes("small-batch") && <p class="product-card-description">{product.description.en}</p>}
     <ProductPrice product={product} currency={currency} />
   </div>
 </article>

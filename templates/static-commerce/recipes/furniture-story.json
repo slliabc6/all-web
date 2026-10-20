@@ -1,0 +1,10 @@
+{
+  "id": "furniture-story",
+  "sections": [
+    { "type": "hero", "variant": "room-story" },
+    { "type": "categories", "variant": "atelier-index" },
+    { "type": "featured", "variant": "staggered" },
+    { "type": "brand-story", "variant": "workshop" },
+    { "type": "faq", "variant": "list" }
+  ]
+}

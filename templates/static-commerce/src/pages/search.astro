@@ -4,12 +4,13 @@ import Breadcrumbs from "../components/navigation/Breadcrumbs.astro";
 import ProductGrid from "../components/product/ProductGrid.astro";
 import { loadCurrentSite } from "../domain/current-site";
 const bundle = await loadCurrentSite();
+const isFurniture = bundle.site.catalogId === "small-batch-furniture";
 ---
 
 <SiteLayout bundle={bundle} title="Search">
   <section class="catalog-page">
     <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Search" }]} />
-    <h1>Search products</h1>
+    <h1>{isFurniture ? "Find a piece" : "Search products"}</h1>
     <label class="search-field">
       <span>Search products</span>
       <input type="search" aria-label="Search products" placeholder="Name, SKU or keyword" data-product-search />

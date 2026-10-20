@@ -2,13 +2,14 @@
 import SiteLayout from "../layouts/SiteLayout.astro";
 import { loadCurrentSite } from "../domain/current-site";
 const bundle = await loadCurrentSite();
+const isFurniture = bundle.site.catalogId === "small-batch-furniture";
 ---
 
 <SiteLayout bundle={bundle} title="Page not found">
   <section class="content-page">
     <p class="eyebrow">404</p>
-    <h1>Page not found</h1>
-    <p>The page may have moved or no longer exists.</p>
+    <h1>{isFurniture ? "This room is empty." : "Page not found"}</h1>
+    <p>{isFurniture ? "The piece or page you were looking for has moved from this collection." : "The page may have moved or no longer exists."}</p>
     <a class="button" href="/">Return home</a>
   </section>
 </SiteLayout>

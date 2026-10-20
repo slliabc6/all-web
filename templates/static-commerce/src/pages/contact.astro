@@ -3,13 +3,14 @@ import SiteLayout from "../layouts/SiteLayout.astro";
 import Breadcrumbs from "../components/navigation/Breadcrumbs.astro";
 import { loadCurrentSite } from "../domain/current-site";
 const bundle = await loadCurrentSite();
+const isFurniture = bundle.site.catalogId === "small-batch-furniture";
 ---
 
 <SiteLayout bundle={bundle} title="Contact">
-  <article class="content-page">
+  <article class:list={["content-page", { "furniture-content": isFurniture }]}>
     <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Contact" }]} />
-    <h1>Contact</h1>
-    <p>Tell us which products, options and quantities you are interested in.</p>
+    <h1>{isFurniture ? "Begin with the piece you keep returning to." : "Contact"}</h1>
+    <p>{isFurniture ? "Tell us the piece, finish and room you have in mind. This link opens a draft in your mail app; nothing is sent until you send it." : "Tell us which products, options and quantities you are interested in."}</p>
     <a class="button" href={`mailto:${bundle.site.contact.email}`}>Email {bundle.site.contact.email}</a>
   </article>
 </SiteLayout>

@@ -66,6 +66,19 @@
       "rights": "repository-owned code",
       "verifiedAt": "2026-10-20",
       "externalLocation": null
+    },
+    {
+      "id": "morrow-house-small-batch-furniture",
+      "kind": "template-instance",
+      "title": "Morrow House 小批量家具标杆站",
+      "description": "空间故事型家具展示实例，包含独立品牌数据、6 件商品、8 张本地生成图片和可复用的首页模块变体。",
+      "path": "templates/static-commerce/data/catalogs/small-batch-furniture/README.md",
+      "tags": ["furniture", "small-batch", "brand-story", "static", "imagegen"],
+      "status": "verified",
+      "source": "local-original; built-in ImageGen",
+      "rights": "repository-owned demo design and generated imagery; fictional product specifications",
+      "verifiedAt": "2026-10-20",
+      "externalLocation": "https://drive.google.com/drive/folders/1Km-gM6zvCcJEcybmB3PjkDJQgHis8Rwi"
     }
   ]
 }

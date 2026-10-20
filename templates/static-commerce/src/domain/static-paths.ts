@@ -22,3 +22,14 @@ export function rewriteStaticReferences(html: string, pagePath: string): string 
     return `${attribute}=${quote}${relative}${suffix}${quote}`;
   });
 }
+
+export function rewriteStaticCssReferences(css: string, cssPath: string): string {
+  const cssDirectory = path.posix.dirname(cssPath.replaceAll("\\", "/"));
+  return css.replace(/url\(\s*(['"]?)(\/[^/)'"\s]+[^)'"\s]*)\1\s*\)/g, (full, quote, value) => {
+    if (value.startsWith("//")) return full;
+    const { pathname, suffix } = splitSuffix(value);
+    const target = pathname.replace(/^\//, "");
+    const relative = path.posix.relative(cssDirectory === "." ? "" : cssDirectory, target) || path.posix.basename(target);
+    return `url(${quote}${relative}${suffix}${quote})`;
+  });
+}

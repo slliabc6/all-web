@@ -1,7 +1,7 @@
 {
   "id": "minimal-retail", "defaultLanguage": "en", "languages": ["en", "zh"],
   "currency": { "code": "USD", "symbol": "$" }, "salesMode": "retail", "themeId": "minimal",
-  "recipeId": "retail-default", "catalogId": "demo",
+  "recipeId": "furniture-story", "catalogId": "small-batch-furniture",
   "navigation": [
     { "id": "home", "label": { "en": "Home", "zh": "首页" }, "href": "/" },
     { "id": "shop", "label": { "en": "Shop", "zh": "商品" }, "href": "/shop" },
@@ -9,7 +9,7 @@
     { "id": "wholesale", "label": { "en": "Wholesale", "zh": "批发" }, "href": "/wholesale" },
     { "id": "contact", "label": { "en": "Contact", "zh": "联系" }, "href": "/contact" }
   ],
-  "contact": { "email": "hello@example.com" }, "inquiryMethods": ["copy", "email"],
+  "contact": { "email": "studio@morrowhouse.example" }, "inquiryMethods": ["copy", "email"],
   "features": { "search": true, "cart": true, "wholesale": false },
   "header": { "variant": "minimal" }, "footer": { "variant": "simple" }
 }

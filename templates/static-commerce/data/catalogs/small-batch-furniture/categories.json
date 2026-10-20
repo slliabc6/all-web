@@ -1,0 +1,6 @@
+[
+  { "id": "seating", "slug": "seating", "name": { "en": "Seating", "zh": "座椅" } },
+  { "id": "tables", "slug": "tables", "name": { "en": "Tables", "zh": "桌几" } },
+  { "id": "storage", "slug": "storage", "name": { "en": "Storage", "zh": "收纳家具" } },
+  { "id": "lighting", "slug": "lighting", "name": { "en": "Lighting", "zh": "灯具" } }
+]

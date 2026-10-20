@@ -4,6 +4,7 @@ import Breadcrumbs from "../components/navigation/Breadcrumbs.astro";
 import CartLine from "../components/cart/CartLine.astro";
 import { loadCurrentSite } from "../domain/current-site";
 const bundle = await loadCurrentSite();
+const isFurniture = bundle.site.catalogId === "small-batch-furniture";
 ---
 
 <SiteLayout bundle={bundle} title="Cart">
@@ -16,7 +17,7 @@ const bundle = await loadCurrentSite();
     data-currency-symbol={bundle.site.currency.symbol}
   >
     <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Cart" }]} />
-    <h1>Your cart</h1>
+    <h1>{isFurniture ? "Your selection" : "Your cart"}</h1>
     <p data-cart-empty>Your cart is empty.</p>
     <div data-cart-lines></div>
     <CartLine />

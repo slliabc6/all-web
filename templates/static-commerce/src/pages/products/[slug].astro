@@ -33,6 +33,13 @@ const related = product.relatedProductIds
         <h1>{product.name.en}</h1>
         <ProductPrice product={product} currency={bundle.site.currency} showTiers />
         <p>{product.description.en}</p>
+        {product.tags.includes("numbered-edition") && (
+          <div class="edition-details">
+            <p><span>Edition</span><strong>Numbered Batch 01</strong></p>
+            <p><span>Making window</span><strong>6–10 weeks</strong></p>
+            <p><span>Finish</span><strong>Hand-rubbed in the workshop</strong></p>
+          </div>
+        )}
         {product.moq && <p><strong>Minimum order:</strong> {product.moq}</p>}
         <p><strong>Availability:</strong> {product.inventoryStatus.replaceAll("-", " ")}</p>
         <ProductOptions product={product} />

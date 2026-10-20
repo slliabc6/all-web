@@ -4,12 +4,31 @@ interface Props { bundle: SiteBundle; variant: string }
 const { bundle, variant } = Astro.props;
 ---
 
-<section class="section hero-section" data-section="hero" data-variant={variant}>
-  <div>
-    <p class="eyebrow">{bundle.site.salesMode === "wholesale" ? "Wholesale collection" : "Designed for daily life"}</p>
-    <h1>{bundle.brand.name.en}</h1>
-    <p>{bundle.brand.description.en}</p>
-    <a class="button" href="/shop">Explore the collection</a>
-  </div>
-  <div class="hero-art" aria-hidden="true"><span></span><span></span><span></span></div>
-</section>
+{variant === "room-story" ? (
+  <section class="section hero-section room-story-hero" data-section="hero" data-variant={variant}>
+    <img
+      src="/catalog-assets/assets/morrow-house-room.webp"
+      alt="Morrow House living room with the Fold Sofa, Low Table No. 3 and Vale Chair"
+      width="1672"
+      height="941"
+      loading="eager"
+    />
+    <div class="room-story-copy">
+      <p class="collection-note">The first room · Batch 01 / 2026</p>
+      <h1>Objects made slowly, for rooms lived in.</h1>
+      <p>Six useful pieces, shaped in walnut, linen, leather and brass. Each is made in a numbered run and allowed to change with use.</p>
+      <a class="button" href="/shop">Enter the collection</a>
+    </div>
+    <p class="hero-caption">Morrow House / an independent furniture atelier</p>
+  </section>
+) : (
+  <section class="section hero-section" data-section="hero" data-variant={variant}>
+    <div>
+      <p class="eyebrow">{bundle.site.salesMode === "wholesale" ? "Wholesale collection" : "Designed for daily life"}</p>
+      <h1>{bundle.brand.name.en}</h1>
+      <p>{bundle.brand.description.en}</p>
+      <a class="button" href="/shop">Explore the collection</a>
+    </div>
+    <div class="hero-art" aria-hidden="true"><span></span><span></span><span></span></div>
+  </section>
+)}

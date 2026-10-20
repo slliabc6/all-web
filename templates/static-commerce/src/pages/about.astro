@@ -3,12 +3,21 @@ import SiteLayout from "../layouts/SiteLayout.astro";
 import Breadcrumbs from "../components/navigation/Breadcrumbs.astro";
 import { loadCurrentSite } from "../domain/current-site";
 const bundle = await loadCurrentSite();
+const isFurniture = bundle.site.catalogId === "small-batch-furniture";
 ---
 
 <SiteLayout bundle={bundle} title="About">
-  <article class="content-page">
+  <article class:list={["content-page", { "furniture-content": isFurniture }]}>
     <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "About" }]} />
-    <h1>About us</h1>
-    <p>{bundle.brand.description.en}</p>
+    <h1>{isFurniture ? "Made close enough to notice." : "About us"}</h1>
+    {isFurniture ? (
+      <div class="content-columns">
+        <p>Morrow House began with a simple preference: fewer pieces, better observed. We design around the way a hand reaches for an armrest, a book gathers beside a lamp, or a table changes when friends stay longer than planned.</p>
+        <div>
+          <p>Every form is released in a numbered batch. Walnut, oak, linen, leather and brass are selected for how they age—not for how perfect they look on day one.</p>
+          <p>This is a demonstration brand. Product specifications, availability and making windows must be confirmed before real publication.</p>
+        </div>
+      </div>
+    ) : <p>{bundle.brand.description.en}</p>}
   </article>
 </SiteLayout>

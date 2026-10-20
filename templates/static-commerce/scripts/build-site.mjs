@@ -2,7 +2,7 @@ import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import { pathToFileURL } from "node:url";
-import { rewriteStaticReferences } from "../src/domain/static-paths.ts";
+import { rewriteStaticCssReferences, rewriteStaticReferences } from "../src/domain/static-paths.ts";
 
 const projectRoot = process.cwd();
 const exportsRoot = path.join(projectRoot, "exports");
@@ -47,13 +47,21 @@ async function inlineModuleScripts(html, outputRoot) {
 }
 
 async function prepareStaticOutput(outputRoot) {
-  const htmlFiles = (await filesUnder(outputRoot)).filter((file) => file.endsWith(".html"));
+  const outputFiles = await filesUnder(outputRoot);
+  const htmlFiles = outputFiles.filter((file) => file.endsWith(".html"));
   for (const file of htmlFiles) {
     const pagePath = path.relative(outputRoot, file).replaceAll("\\", "/");
     let html = await readFile(file, "utf8");
     html = await inlineModuleScripts(html, outputRoot);
     html = rewriteStaticReferences(html, pagePath);
+    html = rewriteStaticCssReferences(html, pagePath);
     await writeFile(file, html, "utf8");
+  }
+  const cssFiles = outputFiles.filter((file) => file.endsWith(".css"));
+  for (const file of cssFiles) {
+    const cssPath = path.relative(outputRoot, file).replaceAll("\\", "/");
+    const css = rewriteStaticCssReferences(await readFile(file, "utf8"), cssPath);
+    await writeFile(file, css, "utf8");
   }
 }
 

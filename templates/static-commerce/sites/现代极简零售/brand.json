@@ -1,4 +1,8 @@
 {
-  "id": "still-form", "name": { "en": "Still Form", "zh": "静物造型" },
-  "description": { "en": "Clear, useful products for modern everyday spaces.", "zh": "为现代日常空间准备的清晰实用之物。" }
+  "id": "morrow-house",
+  "name": { "en": "Morrow House", "zh": "莫罗之家" },
+  "description": {
+    "en": "Furniture made slowly in numbered batches, for rooms that become more personal over time.",
+    "zh": "以小批次慢工制作家具，让房间随着时间变得更有个人气息。"
+  }
 }

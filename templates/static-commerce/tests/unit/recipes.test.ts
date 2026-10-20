@@ -35,6 +35,20 @@ describe("site recipes", () => {
     ] })).toThrow("hero");
   });
 
+  it("accepts the furniture storytelling variants", () => {
+    const recipe = parseRecipe({ id: "furniture-story", sections: [
+      { type: "hero", variant: "room-story" },
+      { type: "categories", variant: "atelier-index" },
+      { type: "featured", variant: "staggered" },
+      { type: "brand-story", variant: "workshop" },
+      { type: "faq", variant: "list" }
+    ] });
+
+    expect(recipe.sections.map((section) => section.variant)).toEqual([
+      "room-story", "atelier-index", "staggered", "workshop", "list"
+    ]);
+  });
+
   it("filters audience-specific sections for each sales mode", () => {
     const recipe = parseRecipe(validRecipe);
     expect(renderableSections(recipe, "retail").some((section) => section.type === "wholesale-callout")).toBe(false);

@@ -1,0 +1,52 @@
+[
+  {
+    "id": "fold-sofa", "slug": "fold-sofa", "sku": "MH-01-26",
+    "name": { "en": "Fold Sofa", "zh": "折线沙发" },
+    "description": { "en": "A low walnut shell wrapped around relaxed linen cushions. Built in a numbered run of twenty-four.", "zh": "低矮胡桃木外壳包裹松弛亚麻软垫，本批次限量二十四件。" },
+    "categoryIds": ["seating"], "tags": ["featured", "small-batch", "numbered-edition"],
+    "images": [{ "src": "assets/fold-sofa.webp", "alt": { "en": "Fold Sofa in walnut and natural linen", "zh": "胡桃木与天然亚麻折线沙发" }, "width": 1254, "height": 1254 }],
+    "options": [{ "id": "linen", "label": { "en": "Linen", "zh": "亚麻色" }, "values": [{ "id": "flax", "label": { "en": "Flax", "zh": "原麻" } }, { "id": "moss", "label": { "en": "Moss", "zh": "苔绿" } }] }],
+    "priceMode": "fixed", "price": 4280, "inventoryStatus": "made-to-order", "relatedProductIds": ["vale-chair", "low-table-03"]
+  },
+  {
+    "id": "vale-chair", "slug": "vale-chair", "sku": "MH-02-26",
+    "name": { "en": "Vale Chair", "zh": "谷地休闲椅" },
+    "description": { "en": "A hand-shaped walnut frame and vegetable-tanned leather sling that softens with use.", "zh": "手工塑形胡桃木框架与植鞣皮革吊带，会随使用逐渐柔软。" },
+    "categoryIds": ["seating"], "tags": ["featured", "small-batch", "numbered-edition"],
+    "images": [{ "src": "assets/vale-chair.webp", "alt": { "en": "Vale Chair in walnut and oxblood leather", "zh": "胡桃木与暗红皮革谷地椅" }, "width": 1254, "height": 1254 }],
+    "options": [{ "id": "leather", "label": { "en": "Leather", "zh": "皮革" }, "values": [{ "id": "oxblood", "label": { "en": "Oxblood", "zh": "暗红" } }, { "id": "tobacco", "label": { "en": "Tobacco", "zh": "烟草棕" } }] }],
+    "priceMode": "fixed", "price": 1680, "inventoryStatus": "low-stock", "relatedProductIds": ["fold-sofa", "reed-lamp"]
+  },
+  {
+    "id": "low-table-03", "slug": "low-table-03", "sku": "MH-03-26",
+    "name": { "en": "Low Table No. 3", "zh": "三号低桌" },
+    "description": { "en": "One expressive walnut slab, softened by hand and balanced on two broad carved feet.", "zh": "一整块纹理鲜明的胡桃木，经手工柔化边缘并落在两只宽厚雕刻桌脚上。" },
+    "categoryIds": ["tables"], "tags": ["featured", "small-batch", "numbered-edition"],
+    "images": [{ "src": "assets/low-table-03.webp", "alt": { "en": "Low Table No. 3 in solid walnut", "zh": "实木胡桃木三号低桌" }, "width": 1254, "height": 1254 }],
+    "priceMode": "fixed", "price": 1320, "inventoryStatus": "made-to-order", "relatedProductIds": ["fold-sofa", "alder-cabinet"]
+  },
+  {
+    "id": "gather-table", "slug": "gather-table", "sku": "MH-04-26",
+    "name": { "en": "Gather Table", "zh": "相聚圆桌" },
+    "description": { "en": "A four-seat smoked-oak table built around an interlocking pedestal with no visible hardware.", "zh": "四人位烟熏橡木圆桌，以无可见五金的交错基座为中心。" },
+    "categoryIds": ["tables"], "tags": ["small-batch", "numbered-edition"],
+    "images": [{ "src": "assets/gather-table.webp", "alt": { "en": "Gather Table in smoked oak", "zh": "烟熏橡木相聚圆桌" }, "width": 1254, "height": 1254 }],
+    "priceMode": "fixed", "price": 2460, "inventoryStatus": "made-to-order", "relatedProductIds": ["vale-chair", "alder-cabinet"]
+  },
+  {
+    "id": "alder-cabinet", "slug": "alder-cabinet", "sku": "MH-05-26",
+    "name": { "en": "Alder Cabinet", "zh": "赤杨边柜" },
+    "description": { "en": "A deliberately off-balance sideboard with a quiet brass reveal and an open bay for the objects kept close.", "zh": "刻意不对称的边柜，以低调黄铜细节和开放格容纳常伴身边的物件。" },
+    "categoryIds": ["storage"], "tags": ["small-batch", "numbered-edition"],
+    "images": [{ "src": "assets/alder-cabinet.webp", "alt": { "en": "Alder Cabinet in dark walnut", "zh": "深色胡桃木赤杨边柜" }, "width": 1254, "height": 1254 }],
+    "priceMode": "fixed", "price": 2980, "inventoryStatus": "made-to-order", "relatedProductIds": ["gather-table", "reed-lamp"]
+  },
+  {
+    "id": "reed-lamp", "slug": "reed-lamp", "sku": "MH-06-26",
+    "name": { "en": "Reed Lamp", "zh": "芦苇落地灯" },
+    "description": { "en": "A darkened brass stem, blackened-steel foot and hand-formed parchment shade, assembled in runs of twelve.", "zh": "深色黄铜灯杆、黑化钢底座与手工成形羊皮纸灯罩，每批仅制作十二件。" },
+    "categoryIds": ["lighting"], "tags": ["small-batch", "numbered-edition"],
+    "images": [{ "src": "assets/reed-lamp.webp", "alt": { "en": "Reed Lamp in aged brass and parchment", "zh": "做旧黄铜与羊皮纸芦苇灯" }, "width": 1254, "height": 1254 }],
+    "priceMode": "fixed", "price": 920, "inventoryStatus": "low-stock", "relatedProductIds": ["vale-chair", "alder-cabinet"]
+  }
+]

@@ -4,9 +4,22 @@ interface Props { bundle: SiteBundle; variant: string }
 const { bundle, variant } = Astro.props;
 ---
 
-<section class="section story-section" data-section="brand-story" data-variant={variant}>
-  <p class="eyebrow">Our approach</p>
-  <h2>Objects with purpose, presented with clarity.</h2>
-  <p>{bundle.brand.description.en}</p>
-  <a href="/about">Read our story</a>
-</section>
+{variant === "workshop" ? (
+  <section class="section story-section workshop-story" data-section="brand-story" data-variant={variant}>
+    <img src="/catalog-assets/assets/workshop-process.webp" alt="A Morrow House maker oiling a walnut chair joint by hand" width="1536" height="1024" loading="lazy" />
+    <div>
+      <p class="eyebrow">Made in fewer numbers</p>
+      <h2>The hand is still visible.</h2>
+      <p>We work in short runs so grain, joinery and finish can be considered piece by piece. Small variations are recorded, not hidden.</p>
+      <p class="batch-note"><strong>Batch 01</strong><span>Six forms · 12–24 pieces each</span><span>Walnut, oak, linen, leather and brass</span></p>
+      <a class="text-link" href="/about">Inside the workshop</a>
+    </div>
+  </section>
+) : (
+  <section class="section story-section" data-section="brand-story" data-variant={variant}>
+    <p class="eyebrow">Our approach</p>
+    <h2>Objects with purpose, presented with clarity.</h2>
+    <p>{bundle.brand.description.en}</p>
+    <a href="/about">Read our story</a>
+  </section>
+)}

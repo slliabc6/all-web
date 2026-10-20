@@ -2,10 +2,10 @@ import { z } from "zod";
 import type { SalesMode, SiteRecipe } from "../domain/types";
 
 export const sectionVariants = {
-  hero: ["split", "full-bleed", "minimal"],
-  categories: ["grid", "pills"],
-  featured: ["grid", "editorial"],
-  "brand-story": ["split", "editorial"],
+  hero: ["split", "full-bleed", "minimal", "room-story"],
+  categories: ["grid", "pills", "atelier-index"],
+  featured: ["grid", "editorial", "staggered"],
+  "brand-story": ["split", "editorial", "workshop"],
   "wholesale-callout": ["band", "card"],
   faq: ["list", "columns"]
 } as const;

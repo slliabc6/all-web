@@ -4,14 +4,15 @@ import Breadcrumbs from "../components/navigation/Breadcrumbs.astro";
 import ProductGrid from "../components/product/ProductGrid.astro";
 import { loadCurrentSite } from "../domain/current-site";
 const bundle = await loadCurrentSite();
+const isFurniture = bundle.site.catalogId === "small-batch-furniture";
 ---
 
 <SiteLayout bundle={bundle} title="Shop">
   <section class="catalog-page">
     <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Shop" }]} />
     <div class="section-heading">
-      <div><p class="eyebrow">Catalog</p><h1>All products</h1></div>
-      <p>{bundle.products.length} products</p>
+      <div><p class="eyebrow">{isFurniture ? "Batch 01 / 2026" : "Catalog"}</p><h1>{isFurniture ? "The first collection" : "All products"}</h1></div>
+      <p>{isFurniture ? `${bundle.products.length} pieces, made in short runs` : `${bundle.products.length} products`}</p>
     </div>
     <ProductGrid products={bundle.products} currency={bundle.site.currency} columns={3} />
   </section>

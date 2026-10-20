@@ -1,7 +1,13 @@
 ---
-interface Props { variant: string }
-const { variant } = Astro.props;
-const questions = [
+import type { SiteBundle } from "../../domain/types";
+interface Props { variant: string; bundle: SiteBundle }
+const { variant, bundle } = Astro.props;
+const isFurniture = bundle.site.catalogId === "small-batch-furniture";
+const questions = isFurniture ? [
+  ["Why numbered batches?", "Short runs let us work with the grain in front of us and keep a useful record of every piece that leaves the workshop."],
+  ["When will a made-to-order piece be ready?", "The dates shown here are presentation copy only. Confirm the current making window with the studio before placing an order."],
+  ["Does this cart place an order?", "No. It prepares a list you can copy or open in your mail app. You still choose whether to send it."]
+] : [
   ["Can I buy retail?", "The site configuration decides whether retail, wholesale or both are shown."],
   ["Does the cart place an order?", "No. It prepares a product enquiry that you can copy or open in your mail app."],
   ["Are prices live?", "No. Displayed prices come from the site's static product data."]
@@ -9,7 +15,7 @@ const questions = [
 ---
 
 <section class="section faq-section" data-section="faq" data-variant={variant}>
-  <div class="section-copy"><p class="eyebrow">Questions</p><h2>Before you enquire</h2></div>
+  <div class="section-copy"><p class="eyebrow">Questions</p><h2>{isFurniture ? "Before a piece becomes yours." : "Before you enquire"}</h2></div>
   <div class="faq-list">
     {questions.map(([question, answer]) => <details><summary>{question}</summary><p>{answer}</p></details>)}
   </div>
