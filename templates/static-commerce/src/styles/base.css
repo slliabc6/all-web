@@ -68,6 +68,21 @@ h1 { max-width: 16ch; margin: 0 0 1rem; font-size: clamp(2.8rem, 8vw, 7rem); lin
 .related-products { margin-top: 6rem; }
 .search-field { display: grid; gap: 0.5rem; max-width: 40rem; margin: 2rem 0; }
 .search-field input { width: 100%; padding: 1rem; border: 1px solid var(--line); border-radius: 0.35rem; background: var(--surface); }
+.add-to-cart { display: grid; grid-template-columns: minmax(7rem, 10rem) 1fr; gap: 0.75rem; margin-top: 2rem; }
+.add-to-cart label { display: grid; gap: 0.35rem; }
+.add-to-cart input { width: 100%; padding: 0.8rem; border: 1px solid var(--line); }
+.add-to-cart button, .cart-actions button { border: 0; border-radius: 999px; padding: 0.9rem 1.15rem; color: #fff; background: var(--accent); }
+.form-status { grid-column: 1 / -1; min-height: 1.5rem; margin: 0; }
+.cart-page { max-width: 64rem; min-height: 65vh; margin: auto; padding: 3rem 1.5rem 7rem; }
+.cart-page > h1 { font-size: clamp(2.5rem, 6vw, 5rem); }
+.cart-line { display: grid; grid-template-columns: 1fr 8rem auto; align-items: center; gap: 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid var(--line); }
+.cart-line h2 { margin: 0.25rem 0; }
+.cart-line label { display: grid; gap: 0.35rem; }
+.cart-line input { width: 100%; padding: 0.65rem; }
+.cart-line button { border: 0; background: transparent; text-decoration: underline; }
+.cart-summary { margin-top: 2rem; padding: 1.5rem; background: var(--surface); }
+.cart-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+.cart-actions .button { margin: 0; }
 
 @media (max-width: 760px) {
   .site-header { grid-template-columns: 1fr auto auto; gap: 1rem; }

@@ -1,0 +1,15 @@
+<template data-cart-line-template>
+  <article class="cart-line" data-cart-line>
+    <div>
+      <p class="product-meta" data-line-sku></p>
+      <h2 data-line-name></h2>
+      <p data-line-options></p>
+      <p data-line-price></p>
+    </div>
+    <label>
+      <span>Quantity</span>
+      <input type="number" min="1" data-line-quantity />
+    </label>
+    <button type="button" data-line-remove>Remove</button>
+  </article>
+</template>

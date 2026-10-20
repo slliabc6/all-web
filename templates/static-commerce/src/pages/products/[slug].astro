@@ -5,6 +5,7 @@ import ProductGallery from "../../components/product/ProductGallery.astro";
 import ProductOptions from "../../components/product/ProductOptions.astro";
 import ProductPrice from "../../components/product/ProductPrice.astro";
 import ProductGrid from "../../components/product/ProductGrid.astro";
+import AddToCart from "../../components/cart/AddToCart.astro";
 import { loadCurrentSite } from "../../domain/current-site";
 
 export async function getStaticPaths() {
@@ -35,6 +36,7 @@ const related = product.relatedProductIds
         {product.moq && <p><strong>Minimum order:</strong> {product.moq}</p>}
         <p><strong>Availability:</strong> {product.inventoryStatus.replaceAll("-", " ")}</p>
         <ProductOptions product={product} />
+        <AddToCart product={product} siteId={bundle.site.id} />
       </div>
     </div>
     {related.length > 0 && (

@@ -21,12 +21,13 @@ const { bundle, title, description = bundle.brand.description.en } = Astro.props
     <meta name="description" content={description} />
     <title>{title} · {bundle.brand.name.en}</title>
   </head>
-  <body>
+  <body data-site-id={bundle.site.id}>
     <a class="skip-link" href="#main-content">Skip to content</a>
     <SiteHeader bundle={bundle} currentPath={Astro.url.pathname} />
     <main id="main-content">
       <slot />
     </main>
     <SiteFooter bundle={bundle} />
+    <script src="../scripts/cart-client.ts"></script>
   </body>
 </html>

@@ -1,0 +1,34 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import Breadcrumbs from "../components/navigation/Breadcrumbs.astro";
+import CartLine from "../components/cart/CartLine.astro";
+import { loadCurrentSite } from "../domain/current-site";
+const bundle = await loadCurrentSite();
+---
+
+<SiteLayout bundle={bundle} title="Cart">
+  <section
+    class="cart-page"
+    data-cart-page
+    data-site-id={bundle.site.id}
+    data-email={bundle.site.contact.email}
+    data-currency-code={bundle.site.currency.code}
+    data-currency-symbol={bundle.site.currency.symbol}
+  >
+    <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Cart" }]} />
+    <h1>Your cart</h1>
+    <p data-cart-empty>Your cart is empty.</p>
+    <div data-cart-lines></div>
+    <CartLine />
+    <div class="cart-summary" data-cart-summary hidden>
+      <p><strong>Known total:</strong> <span data-cart-total></span></p>
+      <p data-cart-quote-note hidden>Quoted separately</p>
+      <div class="cart-actions">
+        <button type="button" data-copy-inquiry>Copy enquiry list</button>
+        <a class="button" data-email-inquiry href={`mailto:${bundle.site.contact.email}`}>Open email draft</a>
+      </div>
+      <p>You still need to send the email from your mail app.</p>
+      <p data-inquiry-status aria-live="polite"></p>
+    </div>
+  </section>
+</SiteLayout>
