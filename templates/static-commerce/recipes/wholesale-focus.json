@@ -1,0 +1,11 @@
+{
+  "id": "wholesale-focus",
+  "sections": [
+    { "type": "hero", "variant": "split" },
+    { "type": "wholesale-callout", "variant": "band" },
+    { "type": "categories", "variant": "grid" },
+    { "type": "featured", "variant": "grid" },
+    { "type": "brand-story", "variant": "editorial" },
+    { "type": "faq", "variant": "columns" }
+  ]
+}

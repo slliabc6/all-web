@@ -1,11 +1,10 @@
 import { access, readFile } from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import type { Brand, Category, Product, SiteBundle, SiteConfig } from "./types";
 import { brandSchema, categoriesSchema, productsSchema, siteConfigSchema } from "./schemas";
 import { parseRecipe } from "../recipes/section-registry";
 
-const defaultRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+const defaultRoot = process.cwd();
 
 async function readJson(filePath: string): Promise<unknown> {
   try {
@@ -82,7 +81,6 @@ export async function loadSite(siteId: string, rootDir = defaultRoot): Promise<S
   const categories = parseFile<Category[]>(categoriesPath, categoriesSchema, await readJson(categoriesPath));
   const products = parseFile<Product[]>(productsPath, productsSchema, await readJson(productsPath));
 
-  if (site.id !== siteId) throw new Error(`site.json: id ${site.id} does not match directory ${siteId}`);
   assertUnique(products, "id");
   assertUnique(products, "slug");
   assertUnique(products, "sku");

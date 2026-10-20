@@ -1,0 +1,6 @@
+[
+  { "id": "home", "slug": "home", "name": { "en": "Home", "zh": "家居" } },
+  { "id": "lifestyle", "slug": "lifestyle", "name": { "en": "Lifestyle", "zh": "生活方式" } },
+  { "id": "electronics", "slug": "electronics", "name": { "en": "Electronics", "zh": "电子产品" } },
+  { "id": "gifts", "slug": "gifts", "name": { "en": "Gifts", "zh": "礼品" } }
+]

@@ -1,0 +1,55 @@
+[
+  {
+    "id": "linen-tray", "slug": "linen-tray", "sku": "HOME-001",
+    "name": { "en": "Linen tray", "zh": "亚麻托盘" },
+    "description": { "en": "A quiet catch-all for desks and entryways.", "zh": "适合书桌与玄关的亚麻收纳托盘。" },
+    "categoryIds": ["home"], "tags": ["featured", "new"],
+    "images": [{ "src": "assets/linen-tray.svg", "alt": { "en": "Sand-colored linen tray", "zh": "沙色亚麻托盘" }, "width": 1200, "height": 1200 }],
+    "options": [{ "id": "color", "label": { "en": "Color", "zh": "颜色" }, "values": [{ "id": "sand", "label": { "en": "Sand", "zh": "沙色" } }, { "id": "olive", "label": { "en": "Olive", "zh": "橄榄绿" } }] }],
+    "priceMode": "fixed", "originalPrice": 39, "price": 29,
+    "inventoryStatus": "in-stock", "relatedProductIds": ["woven-basket", "botanical-candle"]
+  },
+  {
+    "id": "woven-basket", "slug": "woven-basket", "sku": "HOME-002",
+    "name": { "en": "Woven basket", "zh": "编织篮" },
+    "description": { "en": "Natural storage produced in flexible wholesale runs.", "zh": "适合灵活批发数量的天然编织收纳篮。" },
+    "categoryIds": ["home"], "tags": ["featured", "wholesale"],
+    "images": [{ "src": "assets/woven-basket.svg", "alt": { "en": "Natural woven basket", "zh": "天然编织篮" }, "width": 1200, "height": 1200 }],
+    "priceMode": "tiered", "priceTiers": [{ "minQuantity": 10, "unitPrice": 12 }, { "minQuantity": 50, "unitPrice": 10 }, { "minQuantity": 100, "unitPrice": 8.5 }],
+    "moq": 10, "inventoryStatus": "made-to-order", "relatedProductIds": ["linen-tray"]
+  },
+  {
+    "id": "brass-lamp", "slug": "brass-lamp", "sku": "HOME-003",
+    "name": { "en": "Brass lamp", "zh": "黄铜灯" },
+    "description": { "en": "A made-to-order table light with a warm silhouette.", "zh": "按需制作、轮廓温暖的桌灯。" },
+    "categoryIds": ["home"], "tags": ["made-to-order"],
+    "images": [{ "src": "assets/brass-lamp.svg", "alt": { "en": "Brass table lamp", "zh": "黄铜桌灯" }, "width": 1200, "height": 1200 }],
+    "priceMode": "inquiry", "moq": 2, "inventoryStatus": "made-to-order", "relatedProductIds": ["woven-basket"]
+  },
+  {
+    "id": "botanical-candle", "slug": "botanical-candle", "sku": "LIFE-001",
+    "name": { "en": "Botanical candle", "zh": "植物香氛蜡烛" },
+    "description": { "en": "A low-smoke candle with cedar and green tea notes.", "zh": "带有雪松与绿茶气息的低烟蜡烛。" },
+    "categoryIds": ["lifestyle", "gifts"], "tags": ["featured", "gift"],
+    "images": [{ "src": "assets/botanical-candle.svg", "alt": { "en": "Green botanical candle", "zh": "绿色植物香氛蜡烛" }, "width": 1200, "height": 1200 }],
+    "priceMode": "fixed", "price": 24, "inventoryStatus": "in-stock", "relatedProductIds": ["ribbon-gift-set"]
+  },
+  {
+    "id": "pocket-speaker", "slug": "pocket-speaker", "sku": "TECH-001",
+    "name": { "en": "Pocket speaker", "zh": "便携音箱" },
+    "description": { "en": "A compact wireless speaker for desks and travel.", "zh": "适合桌面和旅行使用的紧凑无线音箱。" },
+    "categoryIds": ["electronics"], "tags": ["new"],
+    "images": [{ "src": "assets/pocket-speaker.svg", "alt": { "en": "Compact black speaker", "zh": "紧凑黑色音箱" }, "width": 1200, "height": 1200 }],
+    "options": [{ "id": "color", "label": { "en": "Color", "zh": "颜色" }, "values": [{ "id": "graphite", "label": { "en": "Graphite", "zh": "石墨黑" } }, { "id": "cream", "label": { "en": "Cream", "zh": "奶油白" } }] }],
+    "priceMode": "fixed", "originalPrice": 69, "price": 59, "inventoryStatus": "low-stock", "relatedProductIds": ["linen-tray"]
+  },
+  {
+    "id": "ribbon-gift-set", "slug": "ribbon-gift-set", "sku": "GIFT-001",
+    "name": { "en": "Ribbon gift set", "zh": "丝带礼盒" },
+    "description": { "en": "A presentation-ready set for events and client gifts.", "zh": "适合活动与客户赠礼的成套礼盒。" },
+    "categoryIds": ["gifts"], "tags": ["wholesale", "gift"],
+    "images": [{ "src": "assets/ribbon-gift-set.svg", "alt": { "en": "Dark gift box with ribbon", "zh": "深色丝带礼盒" }, "width": 1200, "height": 1200 }],
+    "priceMode": "tiered", "priceTiers": [{ "minQuantity": 20, "unitPrice": 18 }, { "minQuantity": 100, "unitPrice": 14 }],
+    "moq": 20, "inventoryStatus": "made-to-order", "relatedProductIds": ["botanical-candle"]
+  }
+]

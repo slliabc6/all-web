@@ -1,0 +1,11 @@
+{
+  "id": "hybrid-showcase",
+  "sections": [
+    { "type": "hero", "variant": "full-bleed" },
+    { "type": "featured", "variant": "editorial" },
+    { "type": "categories", "variant": "grid" },
+    { "type": "wholesale-callout", "variant": "card" },
+    { "type": "brand-story", "variant": "editorial" },
+    { "type": "faq", "variant": "list" }
+  ]
+}
