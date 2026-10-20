@@ -1,0 +1,5 @@
+{
+  "id": "test-brand",
+  "name": { "en": "Northstar Goods", "zh": "北辰好物" },
+  "description": { "en": "Useful objects for everyday rituals.", "zh": "为日常生活设计的实用物品。" }
+}

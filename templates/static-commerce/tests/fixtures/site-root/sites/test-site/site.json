@@ -1,0 +1,20 @@
+{
+  "id": "test-site",
+  "defaultLanguage": "en",
+  "languages": ["en", "zh"],
+  "currency": { "code": "USD", "symbol": "$" },
+  "salesMode": "hybrid",
+  "themeId": "minimal",
+  "recipeId": "test-recipe",
+  "catalogId": "test-catalog",
+  "navigation": [
+    { "id": "home", "label": { "en": "Home", "zh": "首页" }, "href": "/" },
+    { "id": "shop", "label": { "en": "Shop", "zh": "商品" }, "href": "/shop" },
+    { "id": "about", "label": { "en": "About", "zh": "关于我们" }, "href": "/about" }
+  ],
+  "contact": { "email": "sales@example.com" },
+  "inquiryMethods": ["copy", "email"],
+  "features": { "search": true, "cart": true, "wholesale": true },
+  "header": { "variant": "announcement", "announcement": { "en": "Wholesale enquiries welcome." } },
+  "footer": { "variant": "columns" }
+}

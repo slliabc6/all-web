@@ -29,6 +29,11 @@ export interface SiteConfig {
   contact: { email: string };
   inquiryMethods: Array<"copy" | "email">;
   features: { search: boolean; cart: boolean; wholesale: boolean };
+  header?: {
+    variant: "minimal" | "catalog" | "announcement";
+    announcement?: LocalizedText;
+  };
+  footer?: { variant: "simple" | "columns" };
 }
 
 export interface Brand {

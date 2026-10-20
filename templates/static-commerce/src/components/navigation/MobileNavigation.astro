@@ -1,0 +1,39 @@
+---
+import type { SiteConfig } from "../../domain/types";
+
+interface Props {
+  site: SiteConfig;
+  currentPath: string;
+}
+
+const { site, currentPath } = Astro.props;
+const normalize = (value: string) => value === "/" ? "/" : value.replace(/\/$/, "");
+---
+
+<div class="mobile-navigation">
+  <button type="button" class="menu-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu">
+    Menu
+  </button>
+  <nav id="mobile-nav" aria-label="Mobile" hidden>
+    {site.navigation.map((item) => (
+      <a
+        href={item.href}
+        aria-current={normalize(item.href) === normalize(currentPath) ? "page" : undefined}
+      >
+        {item.label[site.defaultLanguage] ?? item.label.en}
+      </a>
+    ))}
+  </nav>
+</div>
+
+<script is:inline>
+  document.querySelectorAll('.menu-toggle').forEach((button) => {
+    button.addEventListener('click', () => {
+      const navigation = document.getElementById(button.getAttribute('aria-controls'));
+      const isOpen = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', String(!isOpen));
+      button.setAttribute('aria-label', isOpen ? 'Open menu' : 'Close menu');
+      if (navigation) navigation.hidden = isOpen;
+    });
+  });
+</script>

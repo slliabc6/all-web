@@ -1,0 +1,14 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { loadCurrentSite } from "../domain/current-site";
+const bundle = await loadCurrentSite();
+---
+
+<SiteLayout bundle={bundle} title="Home">
+  <section class="page-intro">
+    <p class="eyebrow">{bundle.site.salesMode === "wholesale" ? "Wholesale collection" : "New collection"}</p>
+    <h1>{bundle.brand.name.en}</h1>
+    <p>{bundle.brand.description.en}</p>
+    <a class="button" href="/shop">Browse products</a>
+  </section>
+</SiteLayout>

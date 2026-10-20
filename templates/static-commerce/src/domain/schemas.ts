@@ -23,7 +23,12 @@ export const siteConfigSchema = z.object({
   ),
   contact: z.object({ email: z.email() }),
   inquiryMethods: z.array(z.enum(["copy", "email"])).min(1),
-  features: z.object({ search: z.boolean(), cart: z.boolean(), wholesale: z.boolean() })
+  features: z.object({ search: z.boolean(), cart: z.boolean(), wholesale: z.boolean() }),
+  header: z.object({
+    variant: z.enum(["minimal", "catalog", "announcement"]),
+    announcement: localizedTextSchema.optional()
+  }).optional(),
+  footer: z.object({ variant: z.enum(["simple", "columns"]) }).optional()
 });
 
 export const brandSchema = z.object({

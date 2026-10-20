@@ -1,0 +1,15 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import Breadcrumbs from "../components/navigation/Breadcrumbs.astro";
+import { loadCurrentSite } from "../domain/current-site";
+const bundle = await loadCurrentSite();
+---
+
+<SiteLayout bundle={bundle} title="Wholesale & retail">
+  <article class="content-page">
+    <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Wholesale & retail" }]} />
+    <h1>Wholesale & retail</h1>
+    <p>Ask us about quantities, product options and current availability.</p>
+    <a class="button" href="/contact">Start an enquiry</a>
+  </article>
+</SiteLayout>

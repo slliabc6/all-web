@@ -1,0 +1,18 @@
+[
+  {
+    "id": "linen-tray",
+    "slug": "linen-tray",
+    "sku": "LINEN-TRAY",
+    "name": { "en": "Linen tray", "zh": "亚麻托盘" },
+    "description": { "en": "A quiet catch-all for the table." },
+    "categoryIds": ["home"],
+    "tags": ["featured"],
+    "images": [
+      { "src": "assets/linen-tray.jpg", "alt": { "en": "Linen tray" }, "width": 800, "height": 800 }
+    ],
+    "priceMode": "fixed",
+    "price": 29,
+    "inventoryStatus": "in-stock",
+    "relatedProductIds": []
+  }
+]
