@@ -1,0 +1,21 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import Breadcrumbs from "../components/navigation/Breadcrumbs.astro";
+import ProductGrid from "../components/product/ProductGrid.astro";
+import { loadCurrentSite } from "../domain/current-site";
+const bundle = await loadCurrentSite();
+---
+
+<SiteLayout bundle={bundle} title="Search">
+  <section class="catalog-page">
+    <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Search" }]} />
+    <h1>Search products</h1>
+    <label class="search-field">
+      <span>Search products</span>
+      <input type="search" aria-label="Search products" placeholder="Name, SKU or keyword" data-product-search />
+    </label>
+    <p data-search-empty hidden>No products found.</p>
+    <ProductGrid products={bundle.products} currency={bundle.site.currency} columns={3} searchResults />
+  </section>
+  <script src="../scripts/product-search.ts"></script>
+</SiteLayout>

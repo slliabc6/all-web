@@ -1,0 +1,19 @@
+---
+import type { CurrencyConfig, Product } from "../../domain/types";
+import ProductCard from "./ProductCard.astro";
+
+interface Props {
+  products: Product[];
+  currency: CurrencyConfig;
+  columns?: 2 | 3 | 4;
+  variant?: "standard" | "image-led" | "compact";
+  searchResults?: boolean;
+}
+const { products, currency, columns = 3, variant = "standard", searchResults = false } = Astro.props;
+---
+
+<div class="product-grid" style={`--grid-columns:${columns}`}>
+  {products.map((product) => (
+    <ProductCard product={product} currency={currency} variant={variant} searchResult={searchResults} />
+  ))}
+</div>

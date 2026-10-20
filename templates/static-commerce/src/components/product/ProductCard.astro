@@ -1,0 +1,30 @@
+---
+import type { CurrencyConfig, Product } from "../../domain/types";
+import ProductPrice from "./ProductPrice.astro";
+
+interface Props {
+  product: Product;
+  currency: CurrencyConfig;
+  variant?: "standard" | "image-led" | "compact";
+  searchResult?: boolean;
+}
+const { product, currency, variant = "standard", searchResult = false } = Astro.props;
+const image = product.images[0];
+---
+
+<article
+  class="product-card"
+  data-product-card
+  data-search-result={searchResult ? "" : undefined}
+  data-search-text={`${product.sku} ${product.name.en} ${product.name.zh ?? ""} ${product.description.en} ${product.tags.join(" ")}`.toLocaleLowerCase()}
+  data-variant={variant}
+>
+  <a href={`/products/${product.slug}`} class="product-image-link">
+    <img src={`/catalog-assets/${image.src}`} alt={image.alt.en} width={image.width} height={image.height} loading="lazy" />
+  </a>
+  <div class="product-card-content">
+    <p class="product-meta">{product.sku}</p>
+    <h2><a href={`/products/${product.slug}`}>{product.name.en}</a></h2>
+    <ProductPrice product={product} currency={currency} />
+  </div>
+</article>
