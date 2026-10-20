@@ -1,59 +1,48 @@
-# all-web · 建站素材与复用资产库
+# all-web
 
-供仓库负责人、Codex 和其他智能体共同维护的长期资料库。目标是积累高质量、多品牌网站的素材、参考案例、组件、模板与经验，让新会话无需依赖历史聊天即可接手。
+可复用的静态购物网站资产库。网站由共享模板、组件、主题和商品数据组合生成，不重复制作孤立页面。
 
-## 核心资产：模板复用
+## 主要路径
 
-**模板复用是批量建站的地基，也是第一优先级。** 网站应由共用模板、组件、品牌配置和素材生成，不应逐个制作无法统一维护的孤立页面。先读 [模板复用核心原则](docs/TEMPLATE-FOUNDATION.md)；视觉风格与 AI 绘图素材作为可替换的主题和内容层一起积累。
-
-## 智能体从这里开始
-
-先完整阅读 [AGENTS.md](AGENTS.md)，再阅读 [当前状态](docs/STATUS.md)、[使用流程](docs/WORKFLOWS.md) 和 [资产索引](catalog/assets.json)。只读取当前任务相关的素材，不要一次加载整个素材库。
-
-核心原则不等于实现完成。GitHub main、本地未提交页面和其他工作区可能不同；以 docs/STATUS.md、实际文件和验证记录确认能力，不虚构模板、构建命令或询盘后端。
-
-## 当前方向
-
-- 轻量静态品牌站，展示产品并支持真实邮箱询盘。
-- 默认采用 Astro 组织静态模板，必要交互再使用 React；品牌数据、样式主题和素材独立配置。每个站点只交付一份带 `index.html` 的常规静态资源目录。
-- 预期部署到 Hostinger；套餐、账号权限、邮件服务和自动部署能力尚未核实。
-- WordPress 是以后可能的迁移方向，当前不依赖 WP；Shopify 不是当前固定目标。
-- 日常用本机文件夹积累资料，负责人手动备份到云盘。GitHub 保存可提交的素材、代码和说明。
-
-## 目录
-
-| 路径 | 用途 |
+| 路径 | 存放内容 |
 | --- | --- |
-| references/ | 参考网址、截图说明、布局分析；参考不等于获准复用 |
-| brands/ | 按品牌整理的资料、产品数据和可提交素材 |
-| components/ | 独立登记的通用组件积累位置；当前首批组件随购物站模板保存 |
-| templates/ | 可运行的网站模板；当前已有模块化静态购物站模板 |
-| projects/ | 项目交接、版本、部署和验证记录 |
-| knowledge/ | 可复用经验和问题复盘 |
-| catalog/assets.json | 机器可读资产索引；仅以当前分支实际条目为准 |
-| _templates/ | 资产、品牌和项目登记范本 |
-| local-only/ | 大型原件、下载包、私人工作资料，仅本地，不进入 Git |
-| docs/ | 智能体流程、状态和备份说明 |
+| `templates/static-commerce/` | Astro 购物站模板、组件、主题、示例数据和构建脚本 |
+| `templates/static-commerce/sites/` | 各网站的品牌与站点配置 |
+| `templates/static-commerce/data/` | 商品、分类和演示图片 |
+| `templates/static-commerce/exports/` | 本机生成的网站成品；不提交 Git |
+| `catalog/assets.json` | 可复用资产索引 |
+| `references/` | 参考网站与结构分析，不等于可发布素材 |
+| `projects/` | 独立项目、交付和验证记录 |
+| `local-only/` | 大文件、原件和私人资料；不提交 Git |
+| `docs/` | 使用、状态和存储说明 |
 
-原始图片与网页衍生图分开保存；不要覆盖原件。小型、明确可公开的素材可以提交；大型原件和视频先放 local-only，再由负责人备份。GitHub 不代替全部素材备份。
+## 使用方法
 
-## 获取与调用
+1. 商品图片和资料上传到 [Google Drive 商品素材库](https://drive.google.com/drive/folders/1nnXydJvTv4h2T6c9e0UWNwX_5jkWfMUo)，按品类和商品分文件夹。
+2. 在 `templates/static-commerce/sites/` 配置品牌、主题和销售模式。
+3. 构建网站：
 
-```sh
-git clone https://github.com/slliabc6/all-web.git
-cd all-web
+```powershell
+cd templates/static-commerce
+npm install
+npm run build:examples
+npm run verify:static
 ```
 
-按索引查找资产，检查对应说明里的状态、来源和使用范围，再复制到目标网站或按其 README 集成。静态购物站模板需要 Node.js，并在其目录运行 `npm install`；具体命令见模板 README。
+成品位于：
 
-给新智能体的提示词：
+```text
+templates/static-commerce/exports/<网站名称>/网站成品/index.html
+```
 
-> 请读取 slliabc6/all-web 的 AGENTS.md、docs/TEMPLATE-FOUNDATION.md、docs/STATUS.md 和 catalog/assets.json。模板复用是第一优先级：先复用或补齐最小模板，再填品牌数据和主题，利用 AI 生成所需素材，并交付实际可打开的预览。完成本次任务：〔填写需求〕。不要把计划当作已实现能力，不要重复搭建孤立页面或追加机械审查。
+每个网站只保留一份常规静态资源目录，可直接查看，也可上传到静态托管平台。
 
-注意：单纯拥有仓库链接不会让所有智能体自动读取；请打开仓库作为工作目录或明确让其读取上述文件。
+## 当前模板
 
-## 发布范围
+- 现代极简 × 零售展示
+- 自然生活 × 批发询盘
+- 深色精品 × 批发/零售混合
 
-初始化时本仓库为公开仓库。提交前确认文件可以公开；不提交客户询盘、密码、API 密钥、未获准公开的公司资料或第三方整站下载包。没有统一授予全仓库素材的复用许可，以各资产记录为准。
+均为纯前端：支持商品展示、搜索、购物车、复制询盘清单和邮件草稿；不包含支付、订单、登录或后台。
 
-详见 [存储与备份](docs/STORAGE.md)。
+详细说明见 [快速使用指南](docs/QUICK-START.md)。智能体开始工作前读取 [AGENTS.md](AGENTS.md) 和 [当前状态](docs/STATUS.md)。
