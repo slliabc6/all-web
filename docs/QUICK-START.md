@@ -46,6 +46,8 @@
 
 [打开网页模板资产库](https://drive.google.com/drive/folders/1VhmrIjZiYwkzt3pojJVYWIqOQJFZN7YC)
 
+模板、组件、主题、数据和网站成品在各自目录中按普通文件夹保存，供直接浏览和引用。ZIP 仅保存在 `备份记录/压缩备份-*`，不作为日常参考入口。
+
 ## 放入商品资料
 
 1. 打开 [商品素材库](https://drive.google.com/drive/folders/1nnXydJvTv4h2T6c9e0UWNwX_5jkWfMUo)。
