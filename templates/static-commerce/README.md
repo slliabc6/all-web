@@ -6,13 +6,14 @@
 
 共享页面包含：首页、商品列表/分类、商品详情、搜索、购物车、关于我们、批发/零售、联系/询盘和 404。
 
-三个示例站共用同一套页面与组件，但内容层可以独立替换：
+四个示例站共用同一套页面与组件，但内容层可以独立替换：
 
 - `sites/现代极简零售/`：`Morrow House` 小批量家具标杆实例，使用独立的 `small-batch-furniture` 商品库和 `furniture-story` 空间故事配方。
 - `sites/自然生活批发/`：自然生活主题、批发询盘模式。
 - `sites/深色精品混合/`：深色精品主题、批发与零售混合模式。
+- `sites/轻快包装用品/`：由 Cupsky 页面结构提炼的餐饮包装主题，使用 `packaging-essentials` 独立商品库和 `packaging-catalog` 首页配方。
 
-后两个实例仍共用 `data/catalogs/demo/` 的自制 SVG 演示商品；Morrow House 使用 8 张本地生成的 WebP 图片，来源与复用说明见 [商品库说明](data/catalogs/small-batch-furniture/README.md)。
+自然生活和深色精品共用 `data/catalogs/demo/` 的自制 SVG 演示商品；Morrow House 使用 8 张本地生成的 WebP 图片；轻快包装用品使用 8 张自制 SVG。来源与复用说明分别见 [家具商品库](data/catalogs/small-batch-furniture/README.md) 和 [包装用品商品库](data/catalogs/packaging-essentials/README.md)。
 
 主题位于 `src/styles/themes/`，站点配方位于 `recipes/`，导航、商品、购物车和页面模块位于 `src/components/`。
 
@@ -51,7 +52,7 @@ exports/<中文站点名>/网站成品/
 2. 修改 `site.json`：内部 `id` 使用稳定的小写英文标识，选择 `themeId`、`recipeId`、`salesMode`、导航、邮箱和功能开关。
 3. 修改 `brand.json` 中英文品牌名称、介绍和首页文案。
 4. 若使用现有商品库，保留对应 `catalogId`；否则在 `data/catalogs/<英文-id>/` 新建 `products.json`、`categories.json` 和 `assets/`，再更新站点的 `catalogId`。
-5. 用 `SITE_ID=<中文目录名> npm run build` 验证单站，或将目录名加入 `scripts/build-examples.mjs` 参与批量输出。
+5. 用 `SITE_ID=<中文目录名> npm run build` 验证单站，或将目录名加入 `scripts/example-sites.mjs` 参与批量输出。
 
 数据在构建时由 Zod 校验。商品支持多图、规格、颜色/款式、SKU、原价与售价、MOQ、阶梯价、库存状态、标签、分类和推荐商品；默认语言为英文，字段结构支持中文，货币默认 USD，不做汇率转换。
 
@@ -67,4 +68,5 @@ exports/<中文站点名>/网站成品/
 - 库存是展示字段，不是真实库存。
 - 没有支付、订单提交、邮件后台、数据库、账户系统或实时汇率。
 - Morrow House 的品牌、商品和参数均为虚构演示内容；图片为仓库内生成素材，不应当作真实产品证据。
+- Common Table Supply 的品牌、商品和参数均为虚构演示内容；SVG 为仓库内自制素材。Cupsky 只作为结构与视觉参考，原始文件未进入公开模板。
 - 其余示例素材为仓库内自制 SVG。参考网站批量采集尚未开始。

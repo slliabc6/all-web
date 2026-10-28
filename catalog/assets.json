@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-20",
+  "updatedAt": "2026-10-28",
   "assets": [
     {
       "id": "static-commerce-template",
@@ -79,6 +79,32 @@
       "rights": "repository-owned demo design and generated imagery; fictional product specifications",
       "verifiedAt": "2026-10-20",
       "externalLocation": "https://drive.google.com/drive/folders/1Km-gM6zvCcJEcybmB3PjkDJQgHis8Rwi"
+    },
+    {
+      "id": "cupsky-structure-reference",
+      "kind": "reference-analysis",
+      "title": "Cupsky 页面结构提炼记录",
+      "description": "记录 Cupsky 本机静态站的页面与模块特征、提取映射和使用边界；原站文件与图片未进入公开仓库。",
+      "path": "references/cupsky-template-source/README.md",
+      "tags": ["reference", "packaging", "structure", "visual-language"],
+      "status": "reference-only",
+      "source": "user-supplied local directory",
+      "rights": "original source rights unverified; analysis only",
+      "verifiedAt": "2026-10-28",
+      "externalLocation": null
+    },
+    {
+      "id": "common-table-packaging-template",
+      "kind": "template-instance",
+      "title": "Common Table Supply 餐饮包装模板",
+      "description": "由 Cupsky 结构特征重写的轻快包装用品主题，包含可复用首页配方、8 件虚构商品、自制 SVG 和完整静态成品。",
+      "path": "templates/static-commerce/data/catalogs/packaging-essentials/README.md",
+      "tags": ["packaging", "wholesale", "retail", "brand-story", "static"],
+      "status": "verified",
+      "source": "local-original; Cupsky used as structural reference",
+      "rights": "repository-owned implementation and self-created demo assets; fictional product specifications",
+      "verifiedAt": "2026-10-28",
+      "externalLocation": null
     }
   ]
 }
