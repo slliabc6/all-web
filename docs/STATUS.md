@@ -9,7 +9,7 @@
 - 新增拼贴首屏、使用场景分类卡、柜台商品网格、服务故事和批发规划横幅五种可复用模块变体；既可用于餐饮包装，也可替换内容后用于其他轻快目录型商店。
 - 四个示例站共生成 58 个 HTML；45 项单元/集成测试通过，静态引用检查通过，浏览器回归 28 项通过、2 项按项目配置跳过。
 - `file://` 桌面 1440×1000 与手机 390×844 实测：首页、8 件商品、手机菜单、商品详情、加入购物车及购物车页面正常；控制台错误、警告、外部 HTTP 请求和失败资源均为 0。
-- Google Drive 同步正在本次任务末尾核实；只有获得回读结果后才会在此处登记云盘链接。
+- 已将展开的[网站成品](https://drive.google.com/drive/folders/1DTeD2ramXdrNbcETB96DBm4x0CFSA7pN)、[模板源码与说明](https://drive.google.com/drive/folders/1yyZBe_XYAYw5OTTHbCt6zl4wgPpP87LN)和[餐饮包装示范素材](https://drive.google.com/drive/folders/1XNElXN6Q2Mq_ee21r00y1Bwvb4LTv-2v)保存到“小李”Google Drive；分别回读 27、23 和 11 个文件，未使用压缩包。
 
 ## 最新决定：模块化静态购物站模板库
 
