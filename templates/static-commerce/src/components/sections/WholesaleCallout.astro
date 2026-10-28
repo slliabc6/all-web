@@ -4,8 +4,15 @@ interface Props { bundle: SiteBundle; variant: string }
 const { bundle, variant } = Astro.props;
 ---
 
-<section class="section wholesale-section" data-section="wholesale-callout" data-variant={variant}>
-  <div><p class="eyebrow">For trade partners</p><h2>Flexible quantities for wholesale.</h2></div>
-  <p>Review MOQ and tier pricing, then send one clear product enquiry.</p>
-  <a class="button" href="/wholesale">Wholesale information</a>
-</section>
+{variant === "planning-banner" ? (
+  <section class="section wholesale-section planning-banner" data-section="wholesale-callout" data-variant={variant}>
+    <div><p class="eyebrow">For the bigger picture</p><h2>Big plans? Let’s pack for them.</h2><p>Bring your quantities, timeline and next good idea. We will turn them into one clear enquiry list.</p></div>
+    <a class="button" href="/wholesale">Plan a wholesale order</a>
+  </section>
+) : (
+  <section class="section wholesale-section" data-section="wholesale-callout" data-variant={variant}>
+    <div><p class="eyebrow">For trade partners</p><h2>Flexible quantities for wholesale.</h2></div>
+    <p>Review MOQ and tier pricing, then send one clear product enquiry.</p>
+    <a class="button" href="/wholesale">Wholesale information</a>
+  </section>
+)}

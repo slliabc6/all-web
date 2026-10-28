@@ -2,8 +2,34 @@
 import type { SiteBundle } from "../../domain/types";
 interface Props { bundle: SiteBundle; variant: string }
 const { bundle, variant } = Astro.props;
+const categoryLines = [
+  { action: "Pack it", title: "Good food, to go.", copy: "Containers for full meals and quick handoff." },
+  { action: "Pour it", title: "One more sip.", copy: "Cups, lids and the everyday pour." },
+  { action: "Serve it", title: "The finishing touch.", copy: "Counter essentials for every order." }
+];
 ---
 
+{variant === "use-case-cards" ? (
+<section class="section packaging-category-section" data-section="categories" data-variant={variant}>
+  <div class="packaging-section-head">
+    <div><p>Find your perfect fit</p><h2>Every order has its thing.</h2></div>
+    <a class="text-link" href="/shop">Explore all packaging</a>
+  </div>
+  <div class="use-case-grid">
+    {bundle.categories.slice(0, 3).map((category, index) => {
+      const product = bundle.products.find((item) => item.categoryIds.includes(category.id));
+      const line = categoryLines[index];
+      return (
+        <a class="use-case-card" href={`/shop?category=${category.slug}`}>
+          <span class="use-case-action">{String(index + 1).padStart(2, "0")} / {line.action}</span>
+          {product && <img src={`/catalog-assets/${product.images[0].src}`} alt={product.images[0].alt.en} width={product.images[0].width} height={product.images[0].height} loading="lazy" />}
+          <span class="use-case-copy"><strong>{line.title}</strong><small>{line.copy}</small></span>
+        </a>
+      );
+    })}
+  </div>
+</section>
+) : (
 <section class="section category-section" data-section="categories" data-variant={variant}>
   <div class="section-copy">
     <p class="eyebrow">{variant === "atelier-index" ? "The collection" : "Browse"}</p>
@@ -16,3 +42,4 @@ const { bundle, variant } = Astro.props;
     ))}
   </div>
 </section>
+)}

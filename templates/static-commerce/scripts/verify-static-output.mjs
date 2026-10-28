@@ -1,5 +1,6 @@
 import { access, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
+import { exampleSites } from "./example-sites.mjs";
 
 const exportsRoot = path.resolve("exports");
 
@@ -34,7 +35,7 @@ async function verifyDirectory(directory) {
 }
 
 let total = 0;
-for (const site of ["现代极简零售", "自然生活批发", "深色精品混合"]) {
+for (const site of exampleSites) {
   const directory = path.join(exportsRoot, site, "网站成品");
   const count = await verifyDirectory(directory);
   total += count;

@@ -2,9 +2,33 @@
 import type { SiteBundle } from "../../domain/types";
 interface Props { bundle: SiteBundle; variant: string }
 const { bundle, variant } = Astro.props;
+const heroProducts = bundle.products.slice(0, 3);
 ---
 
-{variant === "room-story" ? (
+{variant === "packaging-collage" ? (
+  <section class="section hero-section packaging-collage-hero" data-section="hero" data-variant={variant}>
+    <div class="packaging-hero-copy">
+      <p class="packaging-kicker"><span></span> Everyday service, considered</p>
+      <h1>Packaging that keeps up with service.</h1>
+      <p>{bundle.brand.description.en}</p>
+      <div class="packaging-hero-actions">
+        <a class="button" href="/shop">Shop the collection</a>
+        <a class="text-link" href="/wholesale">Buying in bulk?</a>
+      </div>
+      <p class="packaging-hero-note">Small details. A better everyday.</p>
+    </div>
+    <div class="packaging-hero-art" aria-label="A selection of food packaging and tableware">
+      <span class="packaging-hero-label">The service collection</span>
+      {heroProducts.map((product, index) => (
+        <a href={`/products/${product.slug}`} class={`packaging-hero-product product-${index + 1}`}>
+          <img src={`/catalog-assets/${product.images[0].src}`} alt={product.images[0].alt.en} width={product.images[0].width} height={product.images[0].height} loading={index === 0 ? "eager" : "lazy"} />
+        </a>
+      ))}
+      <span class="packaging-stamp">Packed with<br />possibility</span>
+      <span class="packaging-caption">For everything you put your heart into.</span>
+    </div>
+  </section>
+) : variant === "room-story" ? (
   <section class="section hero-section room-story-hero" data-section="hero" data-variant={variant}>
     <img
       src="/catalog-assets/assets/morrow-house-room.webp"

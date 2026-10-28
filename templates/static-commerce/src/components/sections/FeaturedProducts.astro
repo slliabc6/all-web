@@ -4,14 +4,17 @@ import ProductGrid from "../product/ProductGrid.astro";
 interface Props { bundle: SiteBundle; variant: string }
 const { bundle, variant } = Astro.props;
 const tagged = bundle.products.filter((product) => product.tags.includes("featured"));
-const products = (tagged.length ? tagged : bundle.products).slice(0, 4);
+const products = variant === "counter-grid"
+  ? bundle.products.slice(0, 8)
+  : (tagged.length ? tagged : bundle.products).slice(0, 4);
 ---
 
-<section class="section featured-section" data-section="featured" data-variant={variant}>
+<section class={`section featured-section ${variant === "counter-grid" ? "counter-grid" : ""}`} data-section="featured" data-variant={variant}>
   <div class="section-copy">
-    <p class="eyebrow">{variant === "staggered" ? "Current batch" : "Selected"}</p>
-    <h2>{variant === "staggered" ? "The pieces that began the room." : "Featured products"}</h2>
+    <p class="eyebrow">{variant === "staggered" ? "Current batch" : variant === "counter-grid" ? "Your counter, covered" : "Selected"}</p>
+    <h2>{variant === "staggered" ? "The pieces that began the room." : variant === "counter-grid" ? "Meet your daily essentials." : "Featured products"}</h2>
   </div>
-  <ProductGrid products={products} currency={bundle.site.currency} columns={products.length === 4 ? 4 : 3} variant={variant === "editorial" || variant === "staggered" ? "image-led" : "standard"} />
+  <ProductGrid products={products} currency={bundle.site.currency} columns={products.length >= 4 ? 4 : 3} variant={variant === "editorial" || variant === "staggered" || variant === "counter-grid" ? "image-led" : "standard"} />
   {variant === "staggered" && <a class="text-link" href="/shop">See all six pieces</a>}
+  {variant === "counter-grid" && <a class="button packaging-shop-all" href="/shop">Shop all essentials</a>}
 </section>

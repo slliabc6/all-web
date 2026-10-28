@@ -1,0 +1,5 @@
+[
+  { "id": "containers", "slug": "containers", "name": { "en": "Containers", "zh": "餐盒容器" } },
+  { "id": "drinkware", "slug": "drinkware", "name": { "en": "Cups & lids", "zh": "杯具与杯盖" } },
+  { "id": "service", "slug": "service", "name": { "en": "Service essentials", "zh": "餐饮服务用品" } }
+]

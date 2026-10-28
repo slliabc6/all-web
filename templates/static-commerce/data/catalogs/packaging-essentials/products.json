@@ -1,0 +1,70 @@
+[
+  {
+    "id": "fiber-lunch-box", "slug": "fiber-lunch-box", "sku": "CT-C01",
+    "name": { "en": "Fiber Lunch Box", "zh": "植物纤维餐盒" },
+    "description": { "en": "A hinged three-compartment box for full meals and clean handoff.", "zh": "适合完整餐食与利落交付的三格翻盖餐盒。" },
+    "categoryIds": ["containers"], "tags": ["featured", "pack:200 per case", "compostable"],
+    "images": [{ "src": "assets/fiber-lunch-box.svg", "alt": { "en": "Three-compartment fiber lunch box", "zh": "三格植物纤维餐盒" }, "width": 1200, "height": 1200 }],
+    "priceMode": "fixed", "price": 46, "inventoryStatus": "in-stock", "relatedProductIds": ["round-meal-bowl", "wooden-fork-set"]
+  },
+  {
+    "id": "round-meal-bowl", "slug": "round-meal-bowl", "sku": "CT-C02",
+    "name": { "en": "Round Meal Bowl", "zh": "圆形餐食碗" },
+    "description": { "en": "A wide kraft bowl with a clear lid for salads, grains and warm lunches.", "zh": "配透明盖的宽口牛皮纸碗，适合沙拉、谷物和热餐。" },
+    "categoryIds": ["containers"], "tags": ["featured", "pack:150 per case"],
+    "images": [{ "src": "assets/round-meal-bowl.svg", "alt": { "en": "Kraft round meal bowl with clear lid", "zh": "配透明盖的牛皮纸圆碗" }, "width": 1200, "height": 1200 }],
+    "priceMode": "tiered", "priceTiers": [{ "minQuantity": 5, "unitPrice": 38 }, { "minQuantity": 20, "unitPrice": 34 }], "moq": 5,
+    "inventoryStatus": "in-stock", "relatedProductIds": ["fiber-lunch-box", "kraft-carry-bag"]
+  },
+  {
+    "id": "double-wall-cup", "slug": "double-wall-cup", "sku": "CT-D01",
+    "name": { "en": "Double-Wall Coffee Cup", "zh": "双层咖啡杯" },
+    "description": { "en": "A warm-hand cup for the daily pour, supplied in clean unbranded cases.", "zh": "适合日常热饮、手感温和的无品牌双层纸杯。" },
+    "categoryIds": ["drinkware"], "tags": ["featured", "pack:500 per case"],
+    "images": [{ "src": "assets/double-wall-cup.svg", "alt": { "en": "White double-wall coffee cup", "zh": "白色双层咖啡杯" }, "width": 1200, "height": 1200 }],
+    "options": [{ "id": "size", "label": { "en": "Size", "zh": "容量" }, "values": [{ "id": "8oz", "label": { "en": "8 oz", "zh": "8 盎司" } }, { "id": "12oz", "label": { "en": "12 oz", "zh": "12 盎司" } }] }],
+    "priceMode": "fixed", "price": 58, "inventoryStatus": "in-stock", "relatedProductIds": ["clear-cold-cup", "cup-lid-set"]
+  },
+  {
+    "id": "clear-cold-cup", "slug": "clear-cold-cup", "sku": "CT-D02",
+    "name": { "en": "Clear Cold Cup", "zh": "透明冷饮杯" },
+    "description": { "en": "A crisp presentation for iced drinks, smoothies and counter specials.", "zh": "适合冰饮、奶昔和柜台特饮的清爽透明杯。" },
+    "categoryIds": ["drinkware"], "tags": ["featured", "pack:1,000 per case"],
+    "images": [{ "src": "assets/clear-cold-cup.svg", "alt": { "en": "Clear cup for cold drinks", "zh": "透明冷饮杯" }, "width": 1200, "height": 1200 }],
+    "priceMode": "tiered", "priceTiers": [{ "minQuantity": 3, "unitPrice": 62 }, { "minQuantity": 12, "unitPrice": 55 }], "moq": 3,
+    "inventoryStatus": "low-stock", "relatedProductIds": ["double-wall-cup", "cup-lid-set"]
+  },
+  {
+    "id": "cup-lid-set", "slug": "cup-lid-set", "sku": "CT-D03",
+    "name": { "en": "Cup Lid Set", "zh": "通用杯盖组合" },
+    "description": { "en": "Flat and sip-through lids grouped by diameter for simpler restocking.", "zh": "按口径整理的平盖与直饮盖组合，让补货更简单。" },
+    "categoryIds": ["drinkware"], "tags": ["pack:1,000 per case"],
+    "images": [{ "src": "assets/cup-lid-set.svg", "alt": { "en": "Assorted flat and sip-through cup lids", "zh": "平盖与直饮杯盖组合" }, "width": 1200, "height": 1200 }],
+    "priceMode": "inquiry", "moq": 10, "inventoryStatus": "made-to-order", "relatedProductIds": ["double-wall-cup", "clear-cold-cup"]
+  },
+  {
+    "id": "wooden-fork-set", "slug": "wooden-fork-set", "sku": "CT-S01",
+    "name": { "en": "Wooden Fork Set", "zh": "木质餐叉套装" },
+    "description": { "en": "Smooth birch forks packed for counters, catering and event service.", "zh": "适合柜台、餐饮和活动服务的光滑桦木餐叉。" },
+    "categoryIds": ["service"], "tags": ["featured", "pack:500 per case"],
+    "images": [{ "src": "assets/wooden-fork-set.svg", "alt": { "en": "Birch wooden forks", "zh": "桦木餐叉" }, "width": 1200, "height": 1200 }],
+    "priceMode": "fixed", "price": 31, "inventoryStatus": "in-stock", "relatedProductIds": ["fiber-lunch-box", "napkin-stack"]
+  },
+  {
+    "id": "kraft-carry-bag", "slug": "kraft-carry-bag", "sku": "CT-S02",
+    "name": { "en": "Kraft Carry Bag", "zh": "牛皮纸外带袋" },
+    "description": { "en": "A flat-handled carrier sized for stacked meal boxes and café orders.", "zh": "适合叠放餐盒与咖啡店订单的平把手提袋。" },
+    "categoryIds": ["service"], "tags": ["featured", "pack:250 per case"],
+    "images": [{ "src": "assets/kraft-carry-bag.svg", "alt": { "en": "Kraft paper takeaway bag", "zh": "牛皮纸外带袋" }, "width": 1200, "height": 1200 }],
+    "priceMode": "tiered", "priceTiers": [{ "minQuantity": 5, "unitPrice": 29 }, { "minQuantity": 25, "unitPrice": 25 }], "moq": 5,
+    "inventoryStatus": "in-stock", "relatedProductIds": ["round-meal-bowl", "napkin-stack"]
+  },
+  {
+    "id": "napkin-stack", "slug": "napkin-stack", "sku": "CT-S03",
+    "name": { "en": "Counter Napkin Stack", "zh": "柜台餐巾纸" },
+    "description": { "en": "Soft two-ply napkins in compact cases for everyday front-of-house service.", "zh": "适合日常前厅服务的小箱装柔软双层餐巾纸。" },
+    "categoryIds": ["service"], "tags": ["pack:2,000 per case"],
+    "images": [{ "src": "assets/napkin-stack.svg", "alt": { "en": "Stack of natural paper napkins", "zh": "天然色餐巾纸叠" }, "width": 1200, "height": 1200 }],
+    "priceMode": "inquiry", "moq": 4, "inventoryStatus": "made-to-order", "relatedProductIds": ["wooden-fork-set", "kraft-carry-bag"]
+  }
+]

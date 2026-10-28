@@ -2,7 +2,7 @@ export type LanguageCode = "en" | "zh";
 export type LocalizedText = { en: string; zh?: string };
 export type PriceMode = "fixed" | "tiered" | "inquiry";
 export type SalesMode = "retail" | "wholesale" | "hybrid";
-export type ThemeId = "minimal" | "natural" | "luxury";
+export type ThemeId = "minimal" | "natural" | "luxury" | "packaging";
 export type RecipeId = string;
 export type SectionType = "hero" | "categories" | "featured" | "brand-story" | "wholesale-callout" | "faq";
 

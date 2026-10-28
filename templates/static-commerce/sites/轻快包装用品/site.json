@@ -1,0 +1,28 @@
+{
+  "id": "common-table-packaging",
+  "defaultLanguage": "en",
+  "languages": ["en", "zh"],
+  "currency": { "code": "USD", "symbol": "$" },
+  "salesMode": "hybrid",
+  "themeId": "packaging",
+  "recipeId": "packaging-catalog",
+  "catalogId": "packaging-essentials",
+  "navigation": [
+    { "id": "home", "label": { "en": "Home", "zh": "首页" }, "href": "/" },
+    { "id": "shop", "label": { "en": "Packaging", "zh": "包装用品" }, "href": "/shop" },
+    { "id": "wholesale", "label": { "en": "Wholesale", "zh": "批发" }, "href": "/wholesale" },
+    { "id": "about", "label": { "en": "Our approach", "zh": "关于我们" }, "href": "/about" },
+    { "id": "contact", "label": { "en": "Contact", "zh": "联系" }, "href": "/contact" }
+  ],
+  "contact": { "email": "hello@commontable.example" },
+  "inquiryMethods": ["copy", "email"],
+  "features": { "search": true, "cart": true, "wholesale": true },
+  "header": {
+    "variant": "announcement",
+    "announcement": {
+      "en": "Good service starts with the right pack · Small cases and wholesale quantities",
+      "zh": "好服务从合适的包装开始 · 支持小箱与批发数量"
+    }
+  },
+  "footer": { "variant": "columns" }
+}

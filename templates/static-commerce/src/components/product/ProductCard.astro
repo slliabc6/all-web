@@ -10,6 +10,7 @@ interface Props {
 }
 const { product, currency, variant = "standard", searchResult = false } = Astro.props;
 const image = product.images[0];
+const packLabel = product.tags.find((tag) => tag.startsWith("pack:"))?.slice(5);
 ---
 
 <article
@@ -21,9 +22,10 @@ const image = product.images[0];
 >
   <a href={`/products/${product.slug}`} class="product-image-link">
     <img src={`/catalog-assets/${image.src}`} alt={image.alt.en} width={image.width} height={image.height} loading="lazy" />
+    {packLabel && <span class="product-card-plus" aria-hidden="true">+</span>}
   </a>
   <div class="product-card-content">
-    <p class="product-meta">{product.tags.includes("numbered-edition") ? `Numbered batch · ${product.sku}` : product.sku}</p>
+    <p class="product-meta"><span>{product.tags.includes("numbered-edition") ? `Numbered batch · ${product.sku}` : product.sku}</span>{packLabel && <span>{packLabel}</span>}</p>
     <h2><a href={`/products/${product.slug}`}>{product.name.en}</a></h2>
     {product.tags.includes("small-batch") && <p class="product-card-description">{product.description.en}</p>}
     <ProductPrice product={product} currency={currency} />

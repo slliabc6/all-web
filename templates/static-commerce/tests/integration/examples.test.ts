@@ -2,15 +2,21 @@ import { access } from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { loadSite } from "../../src/domain/load-site";
+import { exampleSites } from "../../scripts/example-sites.mjs";
 
 const root = path.resolve(".");
 const examples = [
   { directory: "现代极简零售", id: "minimal-retail", theme: "minimal", mode: "retail", catalog: "small-batch-furniture" },
   { directory: "自然生活批发", id: "natural-wholesale", theme: "natural", mode: "wholesale", catalog: "demo" },
-  { directory: "深色精品混合", id: "luxury-hybrid", theme: "luxury", mode: "hybrid", catalog: "demo" }
+  { directory: "深色精品混合", id: "luxury-hybrid", theme: "luxury", mode: "hybrid", catalog: "demo" },
+  { directory: "轻快包装用品", id: "common-table-packaging", theme: "packaging", mode: "hybrid", catalog: "packaging-essentials" }
 ] as const;
 
 describe("example sites", () => {
+  it("uses one shared site list for build and static verification", () => {
+    expect(exampleSites).toEqual(examples.map((example) => example.directory));
+  });
+
   it("loads Chinese directories with stable English site ids", async () => {
     for (const example of examples) {
       const bundle = await loadSite(example.directory, root);
@@ -40,6 +46,24 @@ describe("example sites", () => {
       "categories:atelier-index",
       "featured:staggered",
       "brand-story:workshop",
+      "faq:list"
+    ]);
+  });
+
+  it("loads the packaging example with eight local demo products and its extracted recipe", async () => {
+    const bundle = await loadSite("轻快包装用品", root);
+    expect(bundle.brand.name.en).toBe("Common Table Supply");
+    expect(bundle.products).toHaveLength(8);
+    expect(new Set(bundle.products.map((product) => product.priceMode))).toEqual(
+      new Set(["fixed", "tiered", "inquiry"])
+    );
+    expect(bundle.products.every((product) => product.images[0].src.endsWith(".svg"))).toBe(true);
+    expect(bundle.recipe.sections.map(({ type, variant }) => `${type}:${variant}`)).toEqual([
+      "hero:packaging-collage",
+      "categories:use-case-cards",
+      "featured:counter-grid",
+      "brand-story:service-story",
+      "wholesale-callout:planning-banner",
       "faq:list"
     ]);
   });

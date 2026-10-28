@@ -3,6 +3,36 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 
 const outputRoot = path.resolve("exports", "现代极简零售", "网站成品");
+const packagingOutputRoot = path.resolve("exports", "轻快包装用品", "网站成品");
+
+test("packaging template keeps its extracted layout and local-only assets", async ({ page }) => {
+  const networkRequests: string[] = [];
+  const failedLocalRequests: string[] = [];
+  page.on("request", (request) => {
+    if (/^https?:/.test(request.url())) networkRequests.push(request.url());
+  });
+  page.on("requestfailed", (request) => {
+    if (request.url().startsWith("file:")) failedLocalRequests.push(request.url());
+  });
+
+  await page.goto(pathToFileURL(path.join(packagingOutputRoot, "index.html")).href);
+  await expect(page.getByRole("heading", { level: 1, name: "Packaging that keeps up with service." })).toBeVisible();
+  await expect(page.locator(".packaging-collage-hero")).toBeVisible();
+  await expect(page.locator(".use-case-grid")).toBeVisible();
+  await expect(page.locator(".counter-grid")).toBeVisible();
+  await expect(page.locator('.counter-grid [data-product-card]')).toHaveCount(8);
+  await expect(page.locator(".service-story")).toBeVisible();
+  await expect(page.locator(".planning-banner")).toBeVisible();
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--accent").trim())).toBe("#ef683a");
+  const images = page.locator("img");
+  expect(await images.count()).toBeGreaterThanOrEqual(8);
+  for (let index = 0; index < await images.count(); index += 1) {
+    await images.nth(index).scrollIntoViewIfNeeded();
+  }
+  await expect.poll(() => images.evaluateAll((nodes) => nodes.every((node) => (node as HTMLImageElement).complete && (node as HTMLImageElement).naturalWidth > 0))).toBe(true);
+  expect(networkRequests).toEqual([]);
+  expect(failedLocalRequests).toEqual([]);
+});
 
 test("static homepage loads local images without network requests", async ({ page }) => {
   const networkRequests: string[] = [];

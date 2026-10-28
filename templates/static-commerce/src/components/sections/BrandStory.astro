@@ -2,9 +2,24 @@
 import type { SiteBundle } from "../../domain/types";
 interface Props { bundle: SiteBundle; variant: string }
 const { bundle, variant } = Astro.props;
+const storyProduct = bundle.products.find((product) => product.id === "kraft-carry-bag") ?? bundle.products[0];
 ---
 
-{variant === "workshop" ? (
+{variant === "service-story" ? (
+  <section class="section story-section service-story" data-section="brand-story" data-variant={variant}>
+    <div class="service-story-visual">
+      {storyProduct && <img src={`/catalog-assets/${storyProduct.images[0].src}`} alt={storyProduct.images[0].alt.en} width={storyProduct.images[0].width} height={storyProduct.images[0].height} loading="lazy" />}
+      <span>Built for the handoff</span>
+    </div>
+    <div class="service-story-copy">
+      <p class="eyebrow">More than what holds it</p>
+      <h2>Your food tells a story. Let it travel well.</h2>
+      <p>A thoughtful meal deserves a thoughtful finish. We bring together the containers, cups and little extras that make serving feel simple.</p>
+      <p>For neighborhood favorites, busy kitchens and all the good things still to come.</p>
+      <a class="button" href="/about">Our approach</a>
+    </div>
+  </section>
+) : variant === "workshop" ? (
   <section class="section story-section workshop-story" data-section="brand-story" data-variant={variant}>
     <img src="/catalog-assets/assets/workshop-process.webp" alt="A Morrow House maker oiling a walnut chair joint by hand" width="1536" height="1024" loading="lazy" />
     <div>
