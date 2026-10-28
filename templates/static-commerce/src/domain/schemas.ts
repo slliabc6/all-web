@@ -11,7 +11,7 @@ export const siteConfigSchema = z.object({
   languages: z.array(z.enum(["en", "zh"])).min(1),
   currency: z.object({ code: z.string().length(3), symbol: z.string().min(1) }),
   salesMode: z.enum(["retail", "wholesale", "hybrid"]),
-  themeId: z.enum(["minimal", "natural", "luxury"]),
+  themeId: z.enum(["minimal", "natural", "luxury", "packaging"]),
   recipeId: z.string().trim().min(1),
   catalogId: z.string().trim().min(1),
   navigation: z.array(

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { siteConfigSchema } from "../../src/domain/schemas";
 import { parseRecipe, renderableSections } from "../../src/recipes/section-registry";
 
 const validRecipe = {
@@ -47,6 +48,42 @@ describe("site recipes", () => {
     expect(recipe.sections.map((section) => section.variant)).toEqual([
       "room-story", "atelier-index", "staggered", "workshop", "list"
     ]);
+  });
+
+  it("accepts the packaging catalog theme and section variants", () => {
+    const site = siteConfigSchema.parse({
+      id: "packaging-demo",
+      defaultLanguage: "en",
+      languages: ["en", "zh"],
+      currency: { code: "USD", symbol: "$" },
+      salesMode: "hybrid",
+      themeId: "packaging",
+      recipeId: "packaging-catalog",
+      catalogId: "packaging-essentials",
+      navigation: [{ id: "home", label: { en: "Home", zh: "首页" }, href: "/" }],
+      contact: { email: "hello@example.com" },
+      inquiryMethods: ["copy", "email"],
+      features: { search: true, cart: true, wholesale: true }
+    });
+    const recipe = parseRecipe({ id: "packaging-catalog", sections: [
+      { type: "hero", variant: "packaging-collage" },
+      { type: "categories", variant: "use-case-cards" },
+      { type: "featured", variant: "counter-grid" },
+      { type: "brand-story", variant: "service-story" },
+      { type: "wholesale-callout", variant: "planning-banner" }
+    ] });
+
+    expect(site.themeId).toBe("packaging");
+    expect(recipe.sections.map((section) => section.variant)).toEqual([
+      "packaging-collage", "use-case-cards", "counter-grid", "service-story", "planning-banner"
+    ]);
+  });
+
+  it("rejects a packaging variant under the wrong section type", () => {
+    expect(() => parseRecipe({
+      id: "bad-packaging",
+      sections: [{ type: "categories", variant: "packaging-collage" }]
+    })).toThrow("packaging-collage");
   });
 
   it("filters audience-specific sections for each sales mode", () => {

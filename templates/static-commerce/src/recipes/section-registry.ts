@@ -2,11 +2,11 @@ import { z } from "zod";
 import type { SalesMode, SiteRecipe } from "../domain/types";
 
 export const sectionVariants = {
-  hero: ["split", "full-bleed", "minimal", "room-story"],
-  categories: ["grid", "pills", "atelier-index"],
-  featured: ["grid", "editorial", "staggered"],
-  "brand-story": ["split", "editorial", "workshop"],
-  "wholesale-callout": ["band", "card"],
+  hero: ["split", "full-bleed", "minimal", "room-story", "packaging-collage"],
+  categories: ["grid", "pills", "atelier-index", "use-case-cards"],
+  featured: ["grid", "editorial", "staggered", "counter-grid"],
+  "brand-story": ["split", "editorial", "workshop", "service-story"],
+  "wholesale-callout": ["band", "card", "planning-banner"],
   faq: ["list", "columns"]
 } as const;
 

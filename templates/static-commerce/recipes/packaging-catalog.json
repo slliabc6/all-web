@@ -1,0 +1,11 @@
+{
+  "id": "packaging-catalog",
+  "sections": [
+    { "type": "hero", "variant": "packaging-collage" },
+    { "type": "categories", "variant": "use-case-cards" },
+    { "type": "featured", "variant": "counter-grid" },
+    { "type": "brand-story", "variant": "service-story" },
+    { "type": "wholesale-callout", "variant": "planning-banner", "audience": ["wholesale", "hybrid"] },
+    { "type": "faq", "variant": "list" }
+  ]
+}
